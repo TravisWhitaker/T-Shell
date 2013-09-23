@@ -4,6 +4,7 @@
   
 # Goal
   The goal of this project is (until completion) to increase my understanding of the [C Programming Language][C].
+  
   (More information coming soon.)
   
 [C]: http://en.wikipedia.org/wiki/C_(programming_language)
