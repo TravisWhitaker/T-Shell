@@ -1,0 +1,10 @@
+# <- comment
+# [command] = ['New Command Name']
+# Test Alias File
+
+#cp = 'cp -i'
+ls = 'ls --color'
+#mv = 'mv -i'
+#ping = 'ping -v'
+#rm = 'rm -i'
+tree = 'tree -C -F'
