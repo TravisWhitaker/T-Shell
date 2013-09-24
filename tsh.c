@@ -36,9 +36,9 @@
 /*
  * Gets the current (relative) directory
  * Argument(s):
- *		void
+ *   void
  * Memory Management:
- * 	  free the pointer to the path when done.
+ *   free the pointer to the path when done.
  * Returns: A pointer to name of the current directory
  */
 char* currentDir(void) {
@@ -58,10 +58,10 @@ char* currentDir(void) {
 /*
  * Runs an external program
  * Argument(s):
- *		const char* extBin, the path of the program to be run
- *		char** extArgv, potential arguments for the program
+ *   const char* extBin, the path of the program to be run
+ *   char** extArgv, potential arguments for the program
  * Memory Management:
- * 	  Nothing to worry about here
+ *   Nothing to worry about here
  * Returns: void
  */
 void extProg(const char* extBin, char** extArgv) {
@@ -77,11 +77,11 @@ void extProg(const char* extBin, char** extArgv) {
 /*
  * Reads a given file.
  * Argument(s):
- *		char* fileDir, the path to the file
- *		char** fileName, the file itself
+ *   char* fileDir, the path to the file
+ *   char** fileName, the file itself
  * Memory Management:
- * 	  Release the elements in the struct, and the struct member 'array'
- * 	  (CVector is included from the header file, 'CVector.h')
+ *   Release the elements in the struct, and the struct member 'array'
+ *   (CVector is included from the header file, 'CVector.h')
  * Returns: Array of the lines in the file
  */
 CVector readFile(char* fileDir, char* fileName) {
@@ -111,9 +111,9 @@ CVector readFile(char* fileDir, char* fileName) {
 /*
  * Frees the memory pointed to by 'ptr'
  * Argument(s):
- *		void* ptr, pointer to ANY allocated memory
+ *   void* ptr, pointer to ANY allocated memory
  * Memory Management:
- *		Used for managing memory
+ *   Used for managing memory
  * Returns: void
  */
 void release(void* ptr) {
@@ -124,9 +124,9 @@ void release(void* ptr) {
 /*
  * Defines how Control-C (SIGINT) behaves, by not letting it do anything.
  * Argument(s):
- *		void
+ *   void
  * Memory Management:
- *		Nothing to worry about here
+ *   Nothing to worry about here
  * Return(s): void
  */
 void ctrlC() {}
@@ -134,9 +134,9 @@ void ctrlC() {}
 /*
  * The Shells main function, most of the work is done in here.
  * Argument(s):
- *		void
+ *   void
  * Memory Management:
- *		Nothing to worry about here
+ *   Nothing to worry about here
  * Returns: status code
  */
 int main(void) {
