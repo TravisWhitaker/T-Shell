@@ -50,7 +50,7 @@ char* currentDir(void) {
 void extProg(const char* extBin, char** extArgv) {
 	int childExitStatus;
 	pid_t childPID = fork(); /* Creates a new process for an
-								external program to run in */
+	                            external program to run in */
 	if (childPID >= 0) { // Was fork successful?
 		if (childPID == 0) execvp(extBin, extArgv); // Run child process
 		else wait(&childExitStatus); // Parent (this) process waits for child to finish
@@ -90,12 +90,12 @@ void ctrlC() {}
 
 int main(int argc, char* argv[]) {
 	signal(SIGINT, ctrlC);	/* Sets the behavior for a Control Character,
-							   specifically Ctrl-C */
+	                           specifically Ctrl-C */
 	//====================================================================================================
 	// Alias Initialization
 	int a = 0;
 	CVector lines = readFile(".", "/.tsh_alias"); /* (As of now) the file must be in
-													 the same directory as the executable */
+	                                                 the same directory as the executable */
 	CVector keys = cv_init(lines.size); // Initializes an Array of Keys
 	CHashTable aliases = cht_init(lines.size); // Initializes a Hash Table of Command Aliases
 	while (a < lines.size) {
@@ -134,9 +134,9 @@ int main(int argc, char* argv[]) {
 			if (!strcmp(input, "exit") || !strcmp(input, "logout")) break;
 			else if (!strcmp(input, "clear")) {
 				printf("%c[2J%c[1;1H", 27, 27); /* Clears the Screen and
-												   resets Cursor position */
+				                                   resets Cursor position */
 				rewind(stdout); /* Sets the stream position indicator
-								   to the beginning of the file */
+				                   to the beginning of the file */
 				ftruncate(1,0); // Truncates the given file (from FD) to a given size
 			} else {
 		 		CVector tokens = split(input, " "); // User input tokens
@@ -155,7 +155,7 @@ int main(int argc, char* argv[]) {
 							j--;
 						}
 						release(args.array); /* Deletes the Alias line buffer if the input
-												command did not match the current key */
+						                        command did not match the current key */
 						break;
 					}
 					i++;
@@ -164,10 +164,10 @@ int main(int argc, char* argv[]) {
 				if (!strcmp(get(&tokens, 0).String, "cd")) {
 					if (tokens.size == 2)
 						chdir(get(&tokens, 1).String); /* Changes the Current Directory
-															  to the given directory */
+						                                  to the given directory */
 					else if (tokens.size == 1)
 						chdir(getenv("HOME")); /* Changes the Current Directory
-												  to the user's home directory */
+						                          to the user's home directory */
 					else printf("cd: too many arguments.\n");
 				}
 				else {
