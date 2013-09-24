@@ -33,6 +33,14 @@
 #define LINE_END '\0' // Null terminator, marks end of a string.
 #define SPACE 32 // The ASCII value for the Space character.
 
+/*
+ * Gets the current (relative) directory
+ * Argument(s):
+ *		void
+ * Memory Management:
+ * 	  free the pointer to the path when done.
+ * Returns: A pointer to name of the current directory
+ */
 char* currentDir(void) {
 	char absoluteBuffer[BUFSIZ] = ""; // Absolute path buffer
 	getcwd(absoluteBuffer, BUFSIZ);
@@ -47,6 +55,15 @@ char* currentDir(void) {
 	return relativeBuffer;
 }
 
+/*
+ * Runs an external program
+ * Argument(s):
+ *		const char* extBin, the path of the program to be run
+ *		char** extArgv, potential arguments for the program
+ * Memory Management:
+ * 	  Nothing to worry about here
+ * Returns: void
+ */
 void extProg(const char* extBin, char** extArgv) {
 	int childExitStatus;
 	pid_t childPID = fork(); /* Creates a new process for an
@@ -57,6 +74,16 @@ void extProg(const char* extBin, char** extArgv) {
 	} else perror("fork");
 }
 
+/*
+ * Reads a given file.
+ * Argument(s):
+ *		char* fileDir, the path to the file
+ *		char** fileName, the file itself
+ * Memory Management:
+ * 	  Release the elements in the struct, and the struct member 'array'
+ * 	  (CVector is included from the header file, 'CVector.h')
+ * Returns: Array of the lines in the file
+ */
 CVector readFile(char* fileDir, char* fileName) {
 	CVector contents = cv_init(0);
 	char filePath[11]; // File path buffer, sized for '.tsh_alias'
@@ -81,14 +108,38 @@ CVector readFile(char* fileDir, char* fileName) {
 	return contents;
 }
 
+/*
+ * Frees the memory pointed to by 'ptr'
+ * Argument(s):
+ *		void* ptr, pointer to ANY allocated memory
+ * Memory Management:
+ *		Used for managing memory
+ * Returns: void
+ */
 void release(void* ptr) {
 	free(ptr);
 	ptr = NULL;
 }
 
+/*
+ * Defines how Control-C (SIGINT) behaves, by not letting it do anything.
+ * Argument(s):
+ *		void
+ * Memory Management:
+ *		Nothing to worry about here
+ * Return(s): void
+ */
 void ctrlC() {}
 
-int main(int argc, char* argv[]) {
+/*
+ * The Shells main function, most of the work is done in here.
+ * Argument(s):
+ *		void
+ * Memory Management:
+ *		Nothing to worry about here
+ * Returns: status code
+ */
+int main(void) {
 	signal(SIGINT, ctrlC);	/* Sets the behavior for a Control Character,
 	                           specifically Ctrl-C */
 	//====================================================================================================
