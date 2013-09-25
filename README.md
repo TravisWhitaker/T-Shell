@@ -6,10 +6,12 @@
   The goal of this project is (until completion) to increase my understanding of [C][C Programming Language].
   
 # Things I've Learned
-  - More about [C][C Programming Language] itself:
-    - Using Header files.
+  - More about [C][C Programming Language]'s characteristics:
     - Using the Preprocessor.
-  - Managing Memory.
+    - Using Header files.
+    - How to Manage Memory.
+    - Signal Handling.
+
   - How to use [Valgrind][Valgrind].
   - What [ANSI Escape Codes][ANSI Escape Codes] are.
 
