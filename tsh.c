@@ -26,12 +26,14 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <readline/readline.h>
+
 #include <CHashTable.h>	// I added a directory to my C Include Path
 #include <CVector.h>	// which is why I am using the Arrows.
 #include <StrUtil.h>	// Normally just use Double Quotes.
 
 #define LINE_END '\0' // Null terminator, marks end of a string.
-#define SPACE 32 // The ASCII value for the Space character.
+#define BLANK_SPACE 32 // The ASCII value for the Space character.
 
 /*
  * Gets the current (relative) directory
@@ -153,7 +155,7 @@ int main(void) {
 		char* key = 
 			substr(
 				get(&lines, a).String, 0,
-				indexOf(get(&lines, a).String, SPACE)
+				indexOf(get(&lines, a).String, BLANK_SPACE)
 			);
 		char* alias = 
 			substr(
@@ -172,23 +174,27 @@ int main(void) {
 	while (true) {
 		//================================================================================================
 		// Print Prompt and Current (Relative) Directory
-		char* relativeDir = currentDir();
+		//char* relativeDir = currentDir();
 		/* Block 1
-		Here */if (strlen(relativeDir) > 0) printf("T-Shell: %s)> ", relativeDir);
-		else printf("T-Shell: /)> ");
-		release(relativeDir);
+		Here *///if (strlen(relativeDir) > 0) printf("T-Shell: %s)> ", relativeDir);
+		//else printf("T-Shell: /)> ");
 		//================================================================================================
-		char input[BUFSIZ] = ""; // Input buffer
-		fgets(input, BUFSIZ, stdin);
-		sscanf(input, "%[^\n]%*c", input); // Discards newline
-		if (input[0] != '\n') {
-			if (!strcmp(input, "exit") || !strcmp(input, "logout")) break;
+		//char input[BUFSIZ] = ""; // Input buffer
+		//fgets(input, BUFSIZ, stdin);
+		//sscanf(input, "%[^\n]%*c", input); // Discards newline
+		char* input = readline("> ");
+		if (input[0] != '\0') {
+			if (!strcmp(input, "exit") || !strcmp(input, "logout")) {
+				free(input); // Frees user input
+				break;
+			}
 			else if (!strcmp(input, "clear")) {
 				printf("%c[2J%c[1;1H", 27, 27); /* Clears the Screen and
 				                                   resets Cursor position */
 				rewind(stdout); /* Sets the stream position indicator
 				                   to the beginning of the file */
 				ftruncate(1,0); // Truncates the given file (from FD) to a given size
+				free(input); // Frees user input
 			} else {
 		 		CVector tokens = split(input, " "); // User input tokens
 				int lcount = 0;	// Iteration Counter
@@ -264,8 +270,10 @@ int main(void) {
 					else printf("tsh: \'%s\' is not a recognized command...\n", input);
 				}
 				release(tokens.array); // Deletes the input tokens
+				free(input); // Frees user input
 			}
-		}
+		} else free(input); // Frees user input
+		//release(relativeDir);
 	}
 	//====================================================================================================
 	// Alias Freeing
