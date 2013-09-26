@@ -174,15 +174,23 @@ int main(void) {
 	while (true) {
 		//================================================================================================
 		// Print Prompt and Current (Relative) Directory
-		//char* relativeDir = currentDir();
+		char* relativeDir = currentDir();
+		char prompt[BUFSIZ] = "T-Shell: ";
+		int b = 0;
 		/* Block 1
-		Here *///if (strlen(relativeDir) > 0) printf("T-Shell: %s)> ", relativeDir);
-		//else printf("T-Shell: /)> ");
+		Here */if (strlen(relativeDir) > 0) {
+			while (b < strlen(relativeDir)) {
+				prompt[9+b] = relativeDir[b];
+				b++;
+			}
+		} else {prompt[9] = '/'; b++;}
+		prompt[9+b] = ')';
+		prompt[10+b] = '>';
+		prompt[11+b] = ' ';
+		prompt[12+b] = '\0';
+		release(relativeDir);
 		//================================================================================================
-		//char input[BUFSIZ] = ""; // Input buffer
-		//fgets(input, BUFSIZ, stdin);
-		//sscanf(input, "%[^\n]%*c", input); // Discards newline
-		char* input = readline("> ");
+		char* input = readline(prompt);
 		if (input[0] != '\0') {
 			if (!strcmp(input, "exit") || !strcmp(input, "logout")) {
 				free(input); // Frees user input
@@ -273,7 +281,6 @@ int main(void) {
 				free(input); // Frees user input
 			}
 		} else free(input); // Frees user input
-		//release(relativeDir);
 	}
 	//====================================================================================================
 	// Alias Freeing
