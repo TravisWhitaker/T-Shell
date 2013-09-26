@@ -176,18 +176,15 @@ int main(void) {
 		// Print Prompt and Current (Relative) Directory
 		char* relativeDir = currentDir();
 		char prompt[BUFSIZ] = "T-Shell: ";
-		int b = 0;
 		/* Block 1
 		Here */if (strlen(relativeDir) > 0) {
+			int b = 0;
 			while (b < strlen(relativeDir)) {
 				prompt[9+b] = relativeDir[b];
 				b++;
 			}
-		} else {prompt[9] = '/'; b++;}
-		prompt[9+b] = ')';
-		prompt[10+b] = '>';
-		prompt[11+b] = ' ';
-		prompt[12+b] = '\0';
+		} else prompt[9] = '/';
+		strcat(prompt, ")> \0");
 		release(relativeDir);
 		//================================================================================================
 		char* input = readline(prompt);
