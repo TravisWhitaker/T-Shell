@@ -32,7 +32,7 @@
 #include <CVector.h>	// which is why I am using the Arrows.
 #include <StrUtil.h>	// Normally just use Double Quotes.
 
-#define LINE_END '\0' // Null terminator, marks end of a string.
+#define STRING_END '\0' // Null terminator, marks end of a string.
 #define BLANK_SPACE 32 // The ASCII value for the Space character.
 
 /*
@@ -53,7 +53,7 @@ char* currentDir(void) {
 		relativeBuffer[i] = relativePath[i+1];
 		i++;
 	}
-	relativeBuffer[i] = LINE_END;
+	relativeBuffer[i] = STRING_END;
 	return relativeBuffer;
 }
 
@@ -101,7 +101,7 @@ CVector readFile(char* fileDir, char* fileName) {
 			if (strchr(line, '#') == NULL && strlen(line) != 1) { // Ignores comments and empty lines
 				char* modLine = calloc(strlen(line), sizeof(char)); // Line buffer
 				memcpy(modLine, line, strlen(line)-1);
-				modLine[strlen(line)-1] = LINE_END;
+				modLine[strlen(line)-1] = STRING_END;
 				add(&contents, i, (GenericType) modLine); // Add line to list of contents
 				i++;
 			}
@@ -146,28 +146,26 @@ int main(void) {
 	                           specifically Ctrl-C */
 	//====================================================================================================
 	// Alias Initialization
-	int a = 0;
 	CVector lines = readFile(".", "/.tsh_alias"); /* (As of now) the file must be in
 	                                                 the same directory as the executable */
 	CVector keys = cv_init(lines.size); // Initializes an Array of Keys
 	CHashTable aliases = cht_init(lines.size); // Initializes a Hash Table of Command Aliases
-	while (a < lines.size) {
+	for (int i = 0; i < lines.size; i++) {
 		char* key = 
 			substr(
-				get(&lines, a).String, 0,
-				indexOf(get(&lines, a).String, BLANK_SPACE)
+				get(&lines, i).String, 0,
+				indexOf(get(&lines, i).String, BLANK_SPACE)
 			);
 		char* alias = 
 			substr(
-				get(&lines, a).String,
-				indexOf(get(&lines, a).String, '\'')+1,
-				strlen(get(&lines, a).String)-1
+				get(&lines, i).String,
+				indexOf(get(&lines, i).String, '\'')+1,
+				strlen(get(&lines, i).String)-1
 			);
-		set(&keys, a, (GenericType) key);
+		set(&keys, i, (GenericType) key);
 		map(&aliases, key, alias);
 		release(alias); // Deletes Alias buffer
-		release(get(&lines, a).String); // Deletes Line buffer
-		a++;
+		release(get(&lines, i).String); // Deletes Line buffer
 	}
 	release(lines.array); // Deletes the Array of Line buffers
 	//====================================================================================================
@@ -178,18 +176,15 @@ int main(void) {
 		char prompt[BUFSIZ] = "T-Shell: ";
 		/* Block 1
 		Here */if (strlen(relativeDir) > 0) {
-			int b = 0;
-			while (b < strlen(relativeDir)) {
-				prompt[9+b] = relativeDir[b];
-				b++;
-			}
+			for (int i = 0; i < strlen(relativeDir); i++)
+				prompt[9+i] = relativeDir[i];
 		} else prompt[9] = '/';
 		strcat(prompt, ")> \0");
-		release(relativeDir);
+		release(relativeDir); // Frees directory name buffer
 		//================================================================================================
 		char* input = readline(prompt);
-		if (input[0] != '\0') {
-			if (!strcmp(input, "exit") || !strcmp(input, "logout")) {
+		if (input[0] != STRING_END) {
+			if (!strcmp(input, "exit") || !strcmp(input, "quit") || !strcmp(input, "logout")) {
 				free(input); // Frees user input
 				break;
 			}
@@ -203,30 +198,25 @@ int main(void) {
 			} else {
 		 		CVector tokens = split(input, " "); // User input tokens
 				int lcount = 0;	// Iteration Counter
-				int i = 0; // Index Counter
 				char argBuff[BUFSIZ];
 				CVector args;
-				while (lcount < keys.size) {
+				for (int i = 0; lcount < keys.size; i++) {
 					if (i >= keys.size) i = 0;
 					if (!strcmp(get(&tokens, 0).String, get(&keys, i).String)) {
 						strcpy(argBuff, lookUp(&aliases, get(&tokens, 0).String).String);
 						args = split(argBuff, " ");
-						int j = args.size-1;
-						while (0 < j) {
+						for (int j = args.size-1; 0 < j; j--)
 							add(&tokens, 1, get(&args, j));
-							j--;
-						}
 						release(args.array); /* Deletes the Alias line buffer if the input
 						                        command did not match the current key */
 						break;
 					}
-					i++;
 					lcount++;
 				}
 				if (!strcmp(get(&tokens, 0).String, "cd")) {
-					if (tokens.size == 2)
+					if (tokens.size > 1)
 						chdir(get(&tokens, 1).String); /* Changes the Current Directory
-						                                  to the given directory */
+						   	                              to the given directory */
 					else if (tokens.size == 1)
 						chdir(getenv("HOME")); /* Changes the Current Directory
 						                          to the user's home directory */
@@ -236,8 +226,7 @@ int main(void) {
 					char* dirs[] = {"/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/"}; // Binary Locations
 					char* path = "";
 					int found = false;
-					int i = 0;
-					while (i < 4) {
+					for (int i = 0; i < 4; i++) {
 						//================================================================================
 						// Searches for the program
 						DIR* binaryDir = opendir(dirs[i]);
@@ -253,19 +242,15 @@ int main(void) {
 							}
 						} else printf("Failed to open directory.\n");
 						release(binaryDir); // Deletes the Directory buffer
-						i++;
 						//================================================================================
 					}
 					if (found == true) {
 						//================================================================================
 						// Sets up argv for the external program
 						char* extArgv[tokens.size];
-						int j = 0;
-						while (j < tokens.size) {
+						for (int j = 0; j < tokens.size; j++)
 							extArgv[j] = get(&tokens, j).String;
-							j++;
-						}
-						extArgv[j] = NULL;
+						extArgv[tokens.size] = NULL;
 						//================================================================================
 						char binPath[strlen(path)+strlen(extArgv[0])];	// Path for the external program
 						strcpy(binPath, path);
@@ -281,11 +266,9 @@ int main(void) {
 	}
 	//====================================================================================================
 	// Alias Freeing
-	a = 0;
-	while (a < keys.size) {
-		unmap(&aliases, get(&keys, a).String); // Deletes a Bucket
-		release(get(&keys, a).String); // Deletes a Key
-		a++;
+	for (int i = 0; i < keys.size; i++) {
+		unmap(&aliases, get(&keys, i).String); // Deletes a Bucket
+		release(get(&keys, i).String); // Deletes a Key
 	}
 	release(keys.array); // Deletes the Array of Keys
 	release(aliases.table); // Deletes the Hash Table of Command Aliases
