@@ -82,7 +82,7 @@ void extProg(const char* extBin, char** extArgv) {
  *   char* fileDir, the path to the file
  *   char** fileName, the file itself
  * Memory Management:
- *   Release the elements in the struct, and the struct member 'array'
+ *   Release the elements in the struct member 'array', and the array itself
  *   (CVector is included from the header file, 'CVector.h')
  * Returns: Array of the lines in the file
  */
@@ -115,7 +115,7 @@ CVector readFile(char* fileDir, char* fileName) {
  * Argument(s):
  *   void* ptr, pointer to ANY allocated memory
  * Memory Management:
- *   Used for managing memory
+ *   Nothing to worry about here.
  * Returns: void
  */
 void release(void* ptr) {
