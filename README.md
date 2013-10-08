@@ -9,13 +9,14 @@
   - More about [C][C Programming Language]'s characteristics:
     - Using the Preprocessor.
     - Using Header files.
-    - How to Manage Memory.
+	- Managing Memory.
     - Signal Handling.
 
   - How to use [Valgrind][Valgrind].
   - What [ANSI Escape Codes][ANSI Escape Codes] are.
 
-  (More information coming soon.)
+
+(More information coming soon.)
   
 [C Programming Language]: http://en.wikipedia.org/wiki/C_(programming_language)
 [Valgrind]: http://en.wikipedia.org/wiki/Valgrind
