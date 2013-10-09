@@ -2,4 +2,4 @@
 # This file is used to run my shell with Valgrind
 clear
 echo "Running..."
-valgrind --tool=memcheck --leak-check=full $1
+valgrind --tool=memcheck --leak-check=full ./tsh
