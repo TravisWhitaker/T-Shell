@@ -3,7 +3,8 @@
   T-Shell is my first large project in C. It is a Command Line Shell for Linux.
   
 # Goal
-  The goal of this project is (until completion) to increase my understanding of [C][C Programming Language].
+  Currently the goal of this project is to increase my understanding of [C][C Programming Language].
+  I do intend to (in future releases) make this a comprehensive shell, with capabilities similar to that of [Bash][Bash], [Zsh][Zsh], and [Fish][Fish]
   
 # Things I've Learned
   - More about [C][C Programming Language]'s characteristics:
@@ -21,3 +22,6 @@
 [C Programming Language]: http://en.wikipedia.org/wiki/C_(programming_language)
 [Valgrind]: http://en.wikipedia.org/wiki/Valgrind
 [ANSI Escape Codes]: http://en.wikipedia.org/wiki/ANSI_escape_code
+[Bash]: http://en.wikipedia.org/wiki/Bash_(Unix_shell)
+[Zsh]: http://en.wikipedia.org/wiki/Z_shell
+[Fish]: http://en.wikipedia.org/wiki/Friendly_interactive_shell
