@@ -27,6 +27,7 @@
 #include <unistd.h>
 
 #include <readline/readline.h>
+#include <readline/history.h>
 
 #include <CHashTable.h>	// I added a directory to my C Include Path
 #include <CVector.h>	// which is why I am using the Arrows.
@@ -213,6 +214,7 @@ int main(void) {
 		release(relativeDir); // Frees directory name buffer
 		//================================================================================================
 		char* input = readline(prompt);
+		add_history(input);
 		if (input[0] != STRING_END) {
 			if (!strcmp(input, "exit") || !strcmp(input, "quit") || !strcmp(input, "logout")) {
 				free(input); // Frees user input
