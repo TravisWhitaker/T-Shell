@@ -1,5 +1,5 @@
 /***************************************************************************
-	Copyright (C) 2013  Tyler J. Cromwell
+    Copyright (C) 2013  Tyler J. Cromwell
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,6 +36,19 @@
 #define BLANK_SPACE 32 // The ASCII value for the Space character.
 
 /*
+ * Frees the memory pointed to by 'ptr'
+ * Argument(s):
+ *   void* ptr, pointer to ANY allocated memory
+ * Memory Management:
+ *   Nothing to worry about here.
+ * Returns: void
+ */
+void release(void* ptr) {
+	free(ptr);
+	ptr = NULL;
+}
+
+/*
  * Gets the current (relative) directory
  * Argument(s):
  *   void
@@ -66,7 +79,7 @@ char* currentDir(void) {
  *   Nothing to worry about here
  * Returns: void
  */
-void extProg(const char* extBin, char** extArgv) {
+void executeProgram(const char* extBin, char** extArgv) {
 	int childExitStatus;
 	pid_t childPID = fork(); /* Creates a new process for an
 	                            external program to run in */
@@ -111,20 +124,37 @@ CVector readFile(char* fileDir, char* fileName) {
 }
 
 /*
- * Frees the memory pointed to by 'ptr'
+ * Searches through 4 directories for the given program.
  * Argument(s):
- *   void* ptr, pointer to ANY allocated memory
+ *   char** path, the path of the given program
+ *   char** dirs[], the directories being searched
+ *   CVector** tokens, a pointer to the tokenized user input
  * Memory Management:
  *   Nothing to worry about here.
- * Returns: void
+ * Returns: Whether or not the program was found
  */
-void release(void* ptr) {
-	free(ptr);
-	ptr = NULL;
+bool locateProgam(char** path, char** dirs[], CVector** tokens) {
+	bool found = false;
+	for (int i = 0; i < 4; i++) {
+		DIR* binaryDir = opendir((*dirs)[i]);
+		if (binaryDir != NULL) {
+			struct dirent *entry = readdir(binaryDir);
+			while (entry != NULL) {
+				if (!strcmp((*entry).d_name, get((*tokens), 0).String)) {
+					*path = (*dirs)[i];
+					found = true;
+					break;
+				}
+				entry = readdir(binaryDir);
+			}
+		} else printf("Failed to open '%s'.\n", (*dirs)[i]);
+		release(binaryDir); // Deletes the Directory buffer
+	}
+	return found;
 }
 
 /*
- * Defines how Control-C (SIGINT) behaves, by not letting it do anything.
+ * Defines how Control-C (SIGINT) behaves, by not letting it close the shell.
  * Argument(s):
  *   void
  * Memory Management:
@@ -223,27 +253,10 @@ int main(void) {
 					else printf("cd: too many arguments.\n");
 				}
 				else {
-					char* dirs[] = {"/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/"}; // Binary Locations
+					char** dirs = (char* []){"/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/"}; // Binary Locations
 					char* path = "";
-					int found = false;
-					for (int i = 0; i < 4; i++) {
-						//================================================================================
-						// Searches for the program
-						DIR* binaryDir = opendir(dirs[i]);
-						if (binaryDir != NULL) {
-							struct dirent *entry = readdir(binaryDir);
-							while (entry != NULL) {
-								if (!strcmp((*entry).d_name, get(&tokens, 0).String)) {
-									path = dirs[i];
-									found = true;
-									break;
-								}
-								entry = readdir(binaryDir);
-							}
-						} else printf("Failed to open directory.\n");
-						release(binaryDir); // Deletes the Directory buffer
-						//================================================================================
-					}
+					CVector* tokenPtr = &tokens;
+					int found = locateProgam(&path, &dirs, &tokenPtr);
 					if (found == true) {
 						//================================================================================
 						// Sets up argv for the external program
@@ -252,10 +265,10 @@ int main(void) {
 							extArgv[j] = get(&tokens, j).String;
 						extArgv[tokens.size] = NULL;
 						//================================================================================
-						char binPath[strlen(path)+strlen(extArgv[0])];	// Path for the external program
+						char binPath[strlen(path)+strlen(extArgv[0])]; // Path for the external program
 						strcpy(binPath, path);
 						strcat(binPath, extArgv[0]);
-						extProg(binPath, extArgv);	// Executes the external program
+						executeProgram(binPath, extArgv); // Executes the external program
 					}
 					else printf("tsh: \'%s\' is not a recognized command...\n", input);
 				}
