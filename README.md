@@ -1,10 +1,10 @@
 # What is T-Shell?
 
-  T-Shell is my first large project in C. It is a Command Line Shell for Linux.
+  T-Shell is my first large project in C. It is a Command Line Shell for Unix-based Operating Systems.
   
 # Goal
   Currently the goal of this project is to increase my understanding of [C][C Programming Language].
-  I do intend to (in future releases) make this a comprehensive shell, with capabilities similar to that of [Bash][Bash], [Zsh][Zsh], and [Fish][Fish]
+  I do intend to (in future releases) make this a comprehensive shell, with capabilities similar to that of [Bash][Bash], [Zsh][Zsh], and [Fish][Fish].
   
 # Things I've Learned
   - More about [C][C Programming Language]'s characteristics:
@@ -14,6 +14,7 @@
     - Signal Handling.
 
   - How to use [Valgrind][Valgrind].
+  - Under the hood, Strings are just Arrays of Characters.
   - What [ANSI Escape Codes][ANSI Escape Codes] are.
 
 
