@@ -258,8 +258,7 @@ int main(void) {
 					char** dirs = (char* []){"/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/"}; // Binary Locations
 					char* path = "";
 					CVector* tokenPtr = &tokens;
-					int found = locateProgam(&path, &dirs, &tokenPtr);
-					if (found == true) {
+					if (locateProgam(&path, &dirs, &tokenPtr)) {
 						//================================================================================
 						// Sets up argv for the external program
 						char* extArgv[tokens.size];
