@@ -26,8 +26,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include <readline/readline.h>
 #include <readline/history.h>
+#include <readline/readline.h>
 
 #include <CHashTable.h>	// I added a directory to my C Include Path
 #include <CVector.h>	// which is why I am using the Arrows.
@@ -47,6 +47,23 @@
 void release(void* ptr) {
 	free(ptr);
 	ptr = NULL;
+}
+
+/*
+ * Clears the terminal screen and sets the cursor to the top-left corner
+ * Arugment(s):
+ *   char* inputPtr, a pointer to user input.
+ * Memory Management:
+ *   Nothing to worry about here.
+ * Return(s): void
+ */
+void clearScreen(char* inputPtr) {
+	printf("%c[2J%c[1;1H", 27, 27); /* Clears the Screen and
+	                                   resets Cursor position */
+	rewind(stdout); /* Sets the stream position indicator
+	                   to the beginning of the file */
+	ftruncate(1,0); // Truncates the given file (from FD) to a given size
+	free(inputPtr); // Frees user input
 }
 
 /*
@@ -127,28 +144,28 @@ CVector readFile(char* fileDir, char* fileName) {
 /*
  * Searches through 4 directories for the given program.
  * Argument(s):
- *   char** path, the path of the given program
- *   char** dirs[], the directories being searched
- *   CVector** tokens, a pointer to the tokenized user input
+ *   char** pathPtr, the path of the given program
+ *   char** dirsPtr[], the directories being searched
+ *   CVector** tokensPtr, a pointer to the tokenized user input
  * Memory Management:
  *   Nothing to worry about here.
  * Returns: Whether or not the program was found
  */
-bool locateProgam(char** path, char** dirs[], CVector** tokens) {
+bool locateProgam(char** pathPtr, char** dirsPtr[], CVector* tokensPtr) {
 	bool found = false;
 	for (int i = 0; i < 4; i++) {
-		DIR* binaryDir = opendir((*dirs)[i]);
-		if (binaryDir != NULL) {
+		DIR* binaryDir = opendir((*dirsPtr)[i]);
+		if (binaryDir != NULL) { // Is directory open?
 			struct dirent *entry = readdir(binaryDir);
-			while (entry != NULL) {
-				if (!strcmp((*entry).d_name, get((*tokens), 0).String)) {
-					*path = (*dirs)[i];
+			while (entry != NULL) { // While the directory has items
+				if (!strcmp((*entry).d_name, get(tokensPtr, 0).String)) {
+					*pathPtr = (*dirsPtr)[i];
 					found = true;
 					break;
 				}
 				entry = readdir(binaryDir);
 			}
-		} else printf("Failed to open '%s'.\n", (*dirs)[i]);
+		} else printf("Failed to open '%s'.\n", (*dirsPtr)[i]);
 		release(binaryDir); // Deletes the Directory buffer
 	}
 	return found;
@@ -220,21 +237,17 @@ int main(void) {
 				free(input); // Frees user input
 				break;
 			}
-			else if (!strcmp(input, "clear")) {
-				printf("%c[2J%c[1;1H", 27, 27); /* Clears the Screen and
-				                                   resets Cursor position */
-				rewind(stdout); /* Sets the stream position indicator
-				                   to the beginning of the file */
-				ftruncate(1,0); // Truncates the given file (from FD) to a given size
-				free(input); // Frees user input
-			} else {
+			else if (!strcmp(input, "clear")) clearScreen(input);
+			else {
 		 		CVector tokens = split(input, " "); // User input tokens
+				//========================================================================================
+				// Injecting command aliases into user input.
 				int lcount = 0;	// Iteration Counter
 				char argBuff[BUFSIZ];
 				CVector args;
 				for (int i = 0; lcount < keys.size; i++) {
 					if (i >= keys.size) i = 0;
-					if (!strcmp(get(&tokens, 0).String, get(&keys, i).String)) {
+					if (!strcmp(get(&tokens, 0).String, get(&keys, i).String)) { // Does the command have an alias?
 						strcpy(argBuff, lookUp(&aliases, get(&tokens, 0).String).String);
 						args = split(argBuff, " ");
 						for (int j = args.size-1; 0 < j; j--)
@@ -245,6 +258,7 @@ int main(void) {
 					}
 					lcount++;
 				}
+				//========================================================================================
 				if (!strcmp(get(&tokens, 0).String, "cd")) {
 					if (tokens.size > 1)
 						chdir(get(&tokens, 1).String); /* Changes the Current Directory
@@ -257,8 +271,7 @@ int main(void) {
 				else {
 					char** dirs = (char* []){"/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/"}; // Binary Locations
 					char* path = "";
-					CVector* tokenPtr = &tokens;
-					if (locateProgam(&path, &dirs, &tokenPtr)) {
+					if (locateProgam(&path, &dirs, &tokens)) {
 						//================================================================================
 						// Sets up argv for the external program
 						char* extArgv[tokens.size];
