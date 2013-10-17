@@ -1,6 +1,6 @@
 # What is T-Shell?
 
-  T-Shell is my first large project in C. It is a Command Line Shell for Unix-based Operating Systems.
+  T-Shell is my first large project in C. It is a Linux Command Line Shell.
   
 # Goal
   Currently the goal of this project is to increase my understanding of [C][C Programming Language].
