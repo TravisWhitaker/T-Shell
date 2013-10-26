@@ -51,7 +51,7 @@ void release(void* ptr) {
 
 /*
  * Clears the terminal screen and sets the cursor to the top-left corner
- * Arugment(s):
+ * Argument(s):
  *   char* inputPtr, a pointer to user input.
  * Memory Management:
  *   Nothing to worry about here.
@@ -64,6 +64,25 @@ void clearScreen(char* inputPtr) {
 	                   to the beginning of the file */
 	ftruncate(1,0); // Truncates the given file (from FD) to a given size
 	free(inputPtr); // Frees user input
+}
+
+/*
+ * Changes the current working directory.
+ * Argument(s):
+ *   CVector* tokens, a pointer to the tokenized user input
+ *   int size, the size of the array of tokens
+ * Memory Management:
+ *   Nothing to worry about here.
+ * Return(s): void
+ */
+void changeDir(CVector* tokens, int size) {
+	if (size == 2)
+		chdir(get(tokens, 1).String); /* Changes the Current Directory
+		   	                              to the given directory */
+	else if (size == 1)
+		chdir(getenv("HOME")); /* Changes the Current Directory
+		                          to the user's home directory */
+	else printf("tsh: cd: too many arguments.\n");
 }
 
 /*
@@ -259,16 +278,8 @@ int main(void) {
 					lcount++;
 				}
 				//========================================================================================
-				if (!strcmp(get(&tokens, 0).String, "cd")) {
-					if (tokens.size > 1)
-						chdir(get(&tokens, 1).String); /* Changes the Current Directory
-						   	                              to the given directory */
-					else if (tokens.size == 1)
-						chdir(getenv("HOME")); /* Changes the Current Directory
-						                          to the user's home directory */
-					else printf("cd: too many arguments.\n");
-				}
-				else {
+				if (!strcmp(get(&tokens, 0).String, "cd")) {changeDir(&tokens, tokens.size);}
+				else { // Sets up argv, then runs the command
 					char** dirs = (char* []){"/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/"}; // Binary Locations
 					char* path = "";
 					if (locateProgam(&path, &dirs, &tokens)) {
