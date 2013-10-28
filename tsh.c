@@ -254,9 +254,9 @@ int main(void) {
 		if (input == NULL) { // Exits when Ctrl-D is pressed
 			printf("\n");
 			break;
-		}else if (input[0] != STRING_END) {
+		} else if (input[0] != STRING_END) {
 			if (!strcmp(input, "exit") || !strcmp(input, "quit") || !strcmp(input, "logout")) {
-				free(input); // Frees user input
+				release(input); // Frees user input
 				break;
 			}
 			else if (!strcmp(input, "clear")) clearScreen(input);
@@ -301,9 +301,9 @@ int main(void) {
 					else printf("tsh: \'%s\' is not a recognized command...\n", input);
 				}
 				release(tokens.array); // Deletes the input tokens
-				free(input); // Frees user input
+				release(input); // Frees user input
 			}
-		} else free(input); // Frees user input
+		} else release(input); // Frees user input
 	}
 	//====================================================================================================
 	// Alias Freeing
