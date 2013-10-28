@@ -236,7 +236,7 @@ int main(void) {
 	}
 	release(lines.array); // Deletes the Array of Line buffers
 	//====================================================================================================
-	while (true) {
+	while (!feof(stdin)) {
 		//================================================================================================
 		// Print Prompt and Current (Relative) Directory
 		char* relativeDir = currentDir();
@@ -251,7 +251,10 @@ int main(void) {
 		//================================================================================================
 		char* input = readline(prompt);
 		add_history(input);
-		if (input[0] != STRING_END) {
+		if (input == NULL) { // Exits when Ctrl-D is pressed
+			printf("\n");
+			break;
+		}else if (input[0] != STRING_END) {
 			if (!strcmp(input, "exit") || !strcmp(input, "quit") || !strcmp(input, "logout")) {
 				free(input); // Frees user input
 				break;
