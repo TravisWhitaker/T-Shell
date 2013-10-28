@@ -236,7 +236,7 @@ int main(void) {
 	}
 	release(lines.array); // Deletes the Array of Line buffers
 	//====================================================================================================
-	while (!feof(stdin)) {
+	while (true) {
 		//================================================================================================
 		// Print Prompt and Current (Relative) Directory
 		char* relativeDir = currentDir();
