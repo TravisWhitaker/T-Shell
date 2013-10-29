@@ -76,8 +76,11 @@ void clearScreen(char* inputPtr) {
  * Return(s): void
  */
 void changeDir(CVector* tokens, int size) {
-	if (size == 2) chdir(get(tokens, 1).String);
-	/* Changes the Current Directory to the given directory */
+	if (size == 2) {
+		if (chdir(get(tokens, 1).String) == -1)
+			perror("tsh: cd"); // Can't change directory
+	} /* Changes the Current Directory to the given directory
+	     or prints an error if it can't */
 	else if (size == 1) chdir(getenv("HOME"));
 	/* Changes the Current Directory to the user's home directory */
 	else printf("tsh: cd: too many arguments.\n");
