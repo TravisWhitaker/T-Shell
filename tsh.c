@@ -211,14 +211,15 @@ int main(void) {
 	// Alias Initialization
 	CVector lines = readFile(".", "/.tsh_alias"); /* (As of now) the file must be in
 	                                                 the same directory as the executable */
-	CVector keys = cv_init(lines.size); // Initializes an Array of Keys
-	CHashTable aliases = cht_init(lines.size); // Initializes a Hash Table of Command Aliases
+	CVector aliases = cv_init(lines.size); // Initializes an Array of Aliases
+	CHashTable realcmds = cht_init(lines.size); // Initializes a Hash Table of actual commands
 	for (int i = 0; i < lines.size; i++) {
 		char* line = get(&lines, i).String; // A line in the file
-		char* alias = substr(line, 0, indexOf(line, BLANK_SPACE));
-		char* realcmd = substr(line, indexOf(line, '\'')+1, strlen(line)-1);
-		set(&keys, i, (GenericType) alias);
-		map(&aliases, alias, realcmd);
+		char* alias = substr(line, 0, indexOf(line, BLANK_SPACE)); // The command alias (KEY)
+		char* realcmd = substr(line, indexOf(line, '\'')+1, strlen(line)-1); // The real command being run
+		                                                                     // (VALUE)
+		set(&aliases, i, (GenericType) alias);
+		map(&realcmds, alias, realcmd);
 		release(realcmd); // Deletes Real Command buffer
 		release(line); // Deletes Line buffer
 	}
@@ -251,14 +252,14 @@ int main(void) {
 			else {
 		 		CVector tokens = split(input, " "); // User input tokens
 				//========================================================================================
-				// Injecting command aliases into user input.
+				// Injecting the real commands into user input before running.
 				int lcount = 0; // Iteration Counter
 				char argBuff[BUFSIZ];
 				CVector args;
-				for (int i = 0; lcount < keys.size; i++) {
-					if (i >= keys.size) i = 0;
-					if (!strcmp(get(&tokens, 0).String, get(&keys, i).String)) { // Does the command have an alias?
-						strcpy(argBuff, lookUp(&aliases, get(&tokens, 0).String).String);
+				for (int i = 0; lcount < aliases.size; i++) {
+					if (i >= aliases.size) i = 0;
+					if (!strcmp(get(&tokens, 0).String, get(&aliases, i).String)) { // Does the command have an alias?
+						strcpy(argBuff, lookUp(&realcmds, get(&tokens, 0).String).String);
 						args = split(argBuff, " ");
 						for (int j = args.size-1; j > 0; j--)
 							add(&tokens, 1, get(&args, j));
@@ -295,12 +296,12 @@ int main(void) {
 	}
 	//====================================================================================================
 	// Alias Freeing
-	for (int i = 0; i < keys.size; i++) {
-		unmap(&aliases, get(&keys, i).String); // Deletes a Bucket
-		release(get(&keys, i).String); // Deletes a Key
+	for (int i = 0; i < aliases.size; i++) {
+		unmap(&realcmds, get(&aliases, i).String); // Deletes a Bucket
+		release(get(&aliases, i).String); // Deletes a Key
 	}
-	release(keys.array); // Deletes the Array of Keys
-	release(aliases.table); // Deletes the Hash Table of Command Aliases
+	release(aliases.array); // Deletes the Array of Aliases
+	release(realcmds.table); // Deletes the Hash Table of Command Aliases
 	//====================================================================================================
 	return 0;
 }
