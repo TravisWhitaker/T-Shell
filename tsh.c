@@ -29,12 +29,12 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
-#include <CHashTable.h>	// I added a directory to my C Include Path
-#include <CVector.h>	// which is why I am using the Arrows.
-#include <StrUtil.h>	// Normally just use Double Quotes.
+#include <CHashTable.h> // I added a directory to my C Include Path
+#include <CVector.h>    // which is why I am using the Arrows.
+#include <StrUtil.h>    // Normally just use Double Quotes.
 
 #define STRING_END '\0' // Null terminator, marks end of a string.
-#define BLANK_SPACE 32 // The ASCII value for the Space character.
+#define BLANK_SPACE 32  // The ASCII value for the Space character.
 
 /*
  * Frees the memory pointed to by 'ptr'
@@ -76,12 +76,10 @@ void clearScreen(char* inputPtr) {
  * Return(s): void
  */
 void changeDir(CVector* tokens, int size) {
-	if (size == 2)
-		chdir(get(tokens, 1).String); /* Changes the Current Directory
-		   	                              to the given directory */
-	else if (size == 1)
-		chdir(getenv("HOME")); /* Changes the Current Directory
-		                          to the user's home directory */
+	if (size == 2) chdir(get(tokens, 1).String);
+	/* Changes the Current Directory to the given directory */
+	else if (size == 1) chdir(getenv("HOME"));
+	/* Changes the Current Directory to the user's home directory */
 	else printf("tsh: cd: too many arguments.\n");
 }
 
@@ -207,8 +205,8 @@ void ctrlC() {}
  * Returns: status code
  */
 int main(void) {
-	signal(SIGINT, ctrlC);	/* Sets the behavior for a Control Character,
-	                           specifically Ctrl-C */
+	signal(SIGINT, ctrlC); /* Sets the behavior for a Control Character,
+	                          specifically Ctrl-C (SIGINT) */
 	//====================================================================================================
 	// Alias Initialization
 	CVector lines = readFile(".", "/.tsh_alias"); /* (As of now) the file must be in
@@ -216,21 +214,13 @@ int main(void) {
 	CVector keys = cv_init(lines.size); // Initializes an Array of Keys
 	CHashTable aliases = cht_init(lines.size); // Initializes a Hash Table of Command Aliases
 	for (int i = 0; i < lines.size; i++) {
-		char* key = 
-			substr(
-				get(&lines, i).String, 0,
-				indexOf(get(&lines, i).String, BLANK_SPACE)
-			);
-		char* alias = 
-			substr(
-				get(&lines, i).String,
-				indexOf(get(&lines, i).String, '\'')+1,
-				strlen(get(&lines, i).String)-1
-			);
-		set(&keys, i, (GenericType) key);
-		map(&aliases, key, alias);
-		release(alias); // Deletes Alias buffer
-		release(get(&lines, i).String); // Deletes Line buffer
+		char* line = get(&lines, i).String; // A line in the file
+		char* alias = substr(line, 0, indexOf(line, BLANK_SPACE));
+		char* realcmd = substr(line, indexOf(line, '\'')+1, strlen(line)-1);
+		set(&keys, i, (GenericType) alias);
+		map(&aliases, alias, realcmd);
+		release(realcmd); // Deletes Real Command buffer
+		release(line); // Deletes Line buffer
 	}
 	release(lines.array); // Deletes the Array of Line buffers
 	//====================================================================================================
@@ -262,7 +252,7 @@ int main(void) {
 		 		CVector tokens = split(input, " "); // User input tokens
 				//========================================================================================
 				// Injecting command aliases into user input.
-				int lcount = 0;	// Iteration Counter
+				int lcount = 0; // Iteration Counter
 				char argBuff[BUFSIZ];
 				CVector args;
 				for (int i = 0; lcount < keys.size; i++) {
