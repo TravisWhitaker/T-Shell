@@ -142,9 +142,7 @@ CVector readFile(char* fileDir, char* fileName) {
 	strcpy(filePath, fileDir);
 	strcat(filePath, fileName);
 	FILE* file = fopen(filePath, "r");
-	if (file == NULL)
-		printf("tsh: File not found or failed to open.\n");
-	else {
+	if (file != NULL) {
 		char line[BUFSIZ];
 		int i = 0;
 		while (fgets(line, BUFSIZ, file) != NULL) // While there is something to be read
@@ -177,7 +175,7 @@ bool locateProgam(char** pathPtr, char** dirsPtr[], CVector* tokensPtr) {
 		if (binaryDir != NULL) { // Is directory open?
 			struct dirent *entry = readdir(binaryDir);
 			while (entry != NULL) { // While the directory has items
-				if (!strcmp((*entry).d_name, get(tokensPtr, 0).String)) {
+				if (!strcmp(entry->d_name, get(tokensPtr, 0).String)) {
 					*pathPtr = (*dirsPtr)[i];
 					found = true;
 					break;
@@ -272,7 +270,7 @@ int main(void) {
 					if (!strcmp(get(&tokens, 0).String, get(&keys, i).String)) { // Does the command have an alias?
 						strcpy(argBuff, lookUp(&aliases, get(&tokens, 0).String).String);
 						args = split(argBuff, " ");
-						for (int j = args.size-1; 0 < j; j--)
+						for (int j = args.size-1; j > 0; j--)
 							add(&tokens, 1, get(&args, j));
 						release(args.array); /* Deletes the Alias line buffer if the input
 						                        command did not match the current key */
