@@ -5,7 +5,7 @@
   (More information coming soon.)
   
 # Goal
-  Currently the goal of this project is to increase my understanding of [C][C Programming Language].
+  I've been using this project as a kind of road-map to follow while I learn [C][C Programming Language].
   I do intend to (in future releases) make this a comprehensive shell, with capabilities similar to that of [Bash][Bash], [Zsh][Z Shell], and [Fish][Fish].
   
   (More information coming soon.)
