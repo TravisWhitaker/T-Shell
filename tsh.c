@@ -17,7 +17,7 @@
 
 /* Standard: gnu99 */
 
-#include <dirent.h>
+#include <errno.h>
 #include <signal.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -62,7 +62,7 @@ void clearScreen(char* inputPtr) {
 	                                   resets Cursor position */
 	rewind(stdout); /* Sets the stream position indicator
 	                   to the beginning of the file */
-	ftruncate(1,0); // Truncates the given file (from FD) to a given size
+	ftruncate(1, 0); // Truncates the given file (from FD) to a given size
 	free(inputPtr); // Frees user input
 }
 
@@ -111,20 +111,24 @@ char* currentDir(void) {
 /*
  * Runs an external program
  * Argument(s):
- *   const char* extBin, the path of the program to be run
+ *   const char* path, the path of the program to be run
  *   char** extArgv, potential arguments for the program
  * Memory Management:
  *   Nothing to worry about here
  * Returns: void
  */
-void executeProgram(const char* extBin, char** extArgv) {
+void executeProgram(const char* path, char** extArgv) {
 	int childExitStatus;
 	pid_t childPID = fork(); /* Creates a new process for an
 	                            external program to run in */
 	if (childPID >= 0) { // Was fork successful?
-		if (childPID == 0) execvp(extBin, extArgv); // Run child process
-		else wait(&childExitStatus); // Parent (this) process waits for child to finish
-	} else perror("fork");
+		if (childPID == 0) {
+			if (execvp(path, extArgv) == -1) { // Run child process
+				perror("tsh");
+				exit(EXIT_FAILURE);
+			}
+		} else wait(&childExitStatus); // Parent (this) process waits for child to finish
+	} else perror("tsh");
 }
 
 /*
@@ -160,36 +164,6 @@ CVector readFile(char* fileDir, char* fileName) {
 }
 
 /*
- * Searches through 4 directories for the given program.
- * Argument(s):
- *   char** pathPtr, the path of the given program
- *   char** dirsPtr[], the directories being searched
- *   CVector** tokensPtr, a pointer to the tokenized user input
- * Memory Management:
- *   Nothing to worry about here.
- * Returns: Whether or not the program was found
- */
-bool locateProgam(char** pathPtr, char** dirsPtr[], CVector* tokensPtr) {
-	bool found = false;
-	for (int i = 0; i < 4; i++) {
-		DIR* binaryDir = opendir((*dirsPtr)[i]);
-		if (binaryDir != NULL) { // Is directory open?
-			struct dirent *entry = readdir(binaryDir);
-			while (entry != NULL) { // While the directory has items
-				if (!strcmp(entry->d_name, get(tokensPtr, 0).String)) {
-					*pathPtr = (*dirsPtr)[i];
-					found = true;
-					break;
-				}
-				entry = readdir(binaryDir);
-			}
-		} else printf("Failed to open '%s'.\n", (*dirsPtr)[i]);
-		release(binaryDir); // Deletes the Directory buffer
-	}
-	return found;
-}
-
-/*
  * Defines how Control-C (SIGINT) behaves, by not letting it close the shell.
  * Argument(s):
  *   void
@@ -219,8 +193,7 @@ int main(void) {
 	for (int i = 0; i < lines.size; i++) {
 		char* line = get(&lines, i).String; // A line in the file
 		char* alias = substr(line, 0, indexOf(line, BLANK_SPACE)); // The command alias (KEY)
-		char* realcmd = substr(line, indexOf(line, '\'')+1, strlen(line)-1); // The real command being run
-		                                                                     // (VALUE)
+		char* realcmd = substr(line, indexOf(line, '\'')+1, strlen(line)-1); // The real command being run (VALUE)
 		set(&aliases, i, (GenericType) alias);
 		map(&realcmds, alias, realcmd);
 		release(realcmd); // Deletes Real Command buffer
@@ -274,23 +247,15 @@ int main(void) {
 				}
 				//========================================================================================
 				if (!strcmp(get(&tokens, 0).String, "cd")) {changeDir(&tokens, tokens.size);}
-				else { // Sets up argv, then runs the command
-					char** dirs = (char* []){"/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/"}; // Binary Locations
-					char* path = "";
-					if (locateProgam(&path, &dirs, &tokens)) {
-						//================================================================================
-						// Sets up argv for the external program
-						char* extArgv[tokens.size];
-						for (int j = 0; j < tokens.size; j++)
-							extArgv[j] = get(&tokens, j).String;
-						extArgv[tokens.size] = NULL;
-						//================================================================================
-						char binPath[strlen(path)+strlen(extArgv[0])]; // Path for the external program
-						strcpy(binPath, path);
-						strcat(binPath, extArgv[0]);
-						executeProgram(binPath, extArgv); // Executes the external program
-					}
-					else printf("tsh: \'%s\' is not a recognized command...\n", input);
+				else {
+					//--------------------------------------------------------------------------------
+					// Sets up argv, then runs the command
+					char* extArgv[tokens.size+1];
+					for (int j = 0; j < tokens.size; j++)
+						extArgv[j] = get(&tokens, j).String;
+					extArgv[tokens.size] = NULL;
+					executeProgram(extArgv[0], extArgv); // Executes the external program
+					//--------------------------------------------------------------------------------
 				}
 				release(tokens.array); // Deletes the input tokens
 				release(input); // Frees user input
