@@ -35,6 +35,7 @@
 
 #define STRING_END '\0' // Null terminator, marks end of a string.
 #define BLANK_SPACE 32  // The ASCII value for the Space character.
+#define BUFFER_SIZE BUFSIZ/32
 
 /*
  * Frees the memory pointed to by 'ptr'
@@ -95,8 +96,8 @@ void changeDir(CVector* tokens, int size) {
  * Returns: A pointer to name of the current directory
  */
 char* currentDir(void) {
-	char absoluteBuffer[BUFSIZ] = ""; // Absolute path buffer
-	getcwd(absoluteBuffer, BUFSIZ);
+	char absoluteBuffer[BUFFER_SIZE] = ""; // Absolute path buffer
+	getcwd(absoluteBuffer, BUFFER_SIZE);
 	char* relativePath = strrchr(absoluteBuffer, '/'); // Relative path buffer
 	char* relativeBuffer = calloc(strlen(relativePath), sizeof(char));
 	int i = 0;
@@ -147,9 +148,9 @@ CVector readFile(char* fileDir, char* fileName) {
 	strcat(filePath, fileName);
 	FILE* file = fopen(filePath, "r");
 	if (file != NULL) {
-		char line[BUFSIZ];
+		char line[BUFFER_SIZE];
 		int i = 0;
-		while (fgets(line, BUFSIZ, file) != NULL) // While there is something to be read
+		while (fgets(line, BUFFER_SIZE, file) != NULL) // While there is something to be read
 			if (strchr(line, '#') == NULL && strlen(line) != 1) { // Ignores comments and empty lines
 				char* modLine = calloc(strlen(line), sizeof(char)); // Line buffer
 				memcpy(modLine, line, strlen(line)-1);
@@ -204,7 +205,7 @@ int main(void) {
 		//================================================================================================
 		// Print Prompt and Current (Relative) Directory
 		char* relativeDir = currentDir();
-		char prompt[BUFSIZ] = "T-Shell: ";
+		char prompt[BUFFER_SIZE] = "T-Shell: ";
 		/* Block 1
 		Here */if (strlen(relativeDir) > 0) {
 			for (int i = 0; i < strlen(relativeDir); i++)
@@ -229,7 +230,7 @@ int main(void) {
 				//========================================================================================
 				// Injecting the real commands into user input before running.
 				int lcount = 0; // Iteration Counter
-				char argBuff[BUFSIZ];
+				char argBuff[BUFFER_SIZE];
 				CVector args;
 				for (int i = 0; lcount < aliases.size; i++) {
 					if (i >= aliases.size) i = 0;
