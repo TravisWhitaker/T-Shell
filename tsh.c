@@ -111,24 +111,23 @@ char* currentDir(void) {
 /*
  * Runs an external program
  * Argument(s):
- *   const char* path, the path of the program to be run
  *   char** extArgv, potential arguments for the program
  * Memory Management:
  *   Nothing to worry about here
  * Returns: void
  */
-void executeProgram(const char* path, char** extArgv) {
+void execute(char** extArgv) {
 	int childExitStatus;
 	pid_t childPID = fork(); /* Creates a new process for an
 	                            external program to run in */
 	if (childPID >= 0) { // Was fork successful?
 		if (childPID == 0) {
-			if (execvp(path, extArgv) == -1) { // Run child process
-				perror("tsh");
+			if (execvp(extArgv[0], extArgv) == -1) { // Run child process
+				perror("tsh: execvp");
 				exit(EXIT_FAILURE);
 			}
 		} else wait(&childExitStatus); // Parent (this) process waits for child to finish
-	} else perror("tsh");
+	} else perror("tsh: fork"); // No it was not
 }
 
 /*
@@ -254,7 +253,7 @@ int main(void) {
 					for (int j = 0; j < tokens.size; j++)
 						extArgv[j] = get(&tokens, j).String;
 					extArgv[tokens.size] = NULL;
-					executeProgram(extArgv[0], extArgv); // Executes the external program
+					execute(extArgv); // Executes the external program
 					//--------------------------------------------------------------------------------
 				}
 				release(tokens.array); // Deletes the input tokens
