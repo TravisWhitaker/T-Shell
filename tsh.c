@@ -78,12 +78,12 @@ void clearScreen(char* inputPtr) {
 void changeDir(CVector* tokens, int size) {
 	if (size == 2) {
 		if (chdir(get(tokens, 1).String) == -1)
-			perror("tsh: cd"); // Can't change directory
+			perror("tsh"); // Can't change directory
 	} /* Changes the Current Directory to the given directory
 	     or prints an error if it can't */
 	else if (size == 1) chdir(getenv("HOME"));
 	/* Changes the Current Directory to the user's home directory */
-	else printf("tsh: cd: too many arguments.\n");
+	else printf("tsh: Too many arguments.\n");
 }
 
 /*
@@ -123,11 +123,11 @@ void execute(char** extArgv) {
 	if (childPID >= 0) { // Was fork successful?
 		if (childPID == 0) {
 			if (execvp(extArgv[0], extArgv) == -1) { // Run child process
-				perror("tsh: execvp");
+				perror("tsh");
 				exit(EXIT_FAILURE);
 			}
 		} else wait(&childExitStatus); // Parent (this) process waits for child to finish
-	} else perror("tsh: fork"); // No it was not
+	} else perror("tsh"); // No it was not
 }
 
 /*
