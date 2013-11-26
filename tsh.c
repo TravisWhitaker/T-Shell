@@ -31,7 +31,7 @@
 
 #include <CHashTable.h> // I added a directory to my C Include Path
 #include <CVector.h>    // which is why I am using the Arrows.
-#include <StrUtil.h>    // Normally just use Double Quotes.
+#include <strutil.h>    // Normally just use Double Quotes.
 
 #define STRING_END '\0' // Null terminator, marks end of a string.
 #define BLANK_SPACE 32  // The ASCII value for the Space character.
@@ -192,8 +192,8 @@ int main(void) {
 	CHashTable realcmds = cht_init(lines.size); // Initializes a Hash Table of actual commands
 	for (int i = 0; i < lines.size; i++) {
 		char* line = get(&lines, i).String; // A line in the file
-		char* alias = substr(line, 0, indexOf(line, BLANK_SPACE)); // The command alias (KEY)
-		char* realcmd = substr(line, indexOf(line, '\'')+1, strlen(line)-1); // The real command being run (VALUE)
+		char* alias = substring(line, 0, indexOf(line, BLANK_SPACE)); // The command alias (KEY)
+		char* realcmd = substring(line, indexOf(line, '\'')+1, strlen(line)-1); // The real command being run (VALUE)
 		set(&aliases, i, (GenericType) alias);
 		map(&realcmds, alias, realcmd);
 		release(realcmd); // Deletes Real Command buffer
@@ -226,7 +226,7 @@ int main(void) {
 			}
 			else if (!strcmp(input, "clear")) clearScreen(input);
 			else {
-		 		CVector tokens = split(input, " "); // User input tokens
+		 		CVector tokens = cvect_split(input, " "); // User input tokens
 				//========================================================================================
 				// Injecting the real commands into user input before running.
 				int lcount = 0; // Iteration Counter
@@ -236,7 +236,7 @@ int main(void) {
 					if (i >= aliases.size) i = 0;
 					if (!strcmp(get(&tokens, 0).String, get(&aliases, i).String)) { // Does the command have an alias?
 						strcpy(argBuff, lookUp(&realcmds, get(&tokens, 0).String).String);
-						args = split(argBuff, " ");
+						args = cvect_split(argBuff, " ");
 						for (int j = args.size-1; j > 0; j--)
 							add(&tokens, 1, get(&args, j));
 						release(args.array); /* Deletes the Alias line buffer if the input
