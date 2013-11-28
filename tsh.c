@@ -70,13 +70,13 @@ void clearScreen(char* inputPtr) {
 /*
  * Changes the current working directory.
  * Argument(s):
- *   CVector* tokens, a pointer to the tokenized user input
+ *   Vector* tokens, a pointer to the tokenized user input
  *   int size, the size of the array of tokens
  * Memory Management:
  *   Nothing to worry about here.
  * Return(s): void
  */
-void changeDir(CVector* tokens, int size) {
+void changeDir(Vector* tokens, int size) {
 	if (size == 2) {
 		if (chdir(get(tokens, 1).String) == -1)
 			perror("tsh"); // Can't change directory
@@ -138,11 +138,11 @@ void execute(char** extArgv) {
  *   char** fileName, the file itself
  * Memory Management:
  *   Release the elements in the struct member 'array', and the array itself
- *   (CVector is included from the header file, 'CVector.h')
+ *   (Vector is included from the header file, 'Vector.h')
  * Returns: Array of the lines in the file
  */
-CVector readFile(char* fileDir, char* fileName) {
-	CVector contents = cv_init(0);
+Vector readFile(char* fileDir, char* fileName) {
+	Vector contents = vect_init(0);
 	char filePath[11]; // File path buffer, sized for '.tsh_alias'
 	strcpy(filePath, fileDir);
 	strcat(filePath, fileName);
@@ -155,7 +155,7 @@ CVector readFile(char* fileDir, char* fileName) {
 				char* modLine = calloc(strlen(line), sizeof(char)); // Line buffer
 				memcpy(modLine, line, strlen(line)-1);
 				modLine[strlen(line)-1] = STRING_END;
-				add(&contents, i, (GenericType) modLine); // Add line to list of contents
+				add(&contents, i, (GenType) modLine); // Add line to list of contents
 				i++;
 			}
 		fclose(file);
@@ -186,15 +186,15 @@ int main(void) {
 	                          specifically Ctrl-C (SIGINT) */
 	//====================================================================================================
 	// Alias Initialization
-	CVector lines = readFile(".", "/.tsh_alias"); /* (As of now) the file must be in
+	Vector lines = readFile(".", "/.tsh_alias"); /* (As of now) the file must be in
 	                                                 the same directory as the executable */
-	CVector aliases = cv_init(lines.size); // Initializes an Array of Aliases
-	CHashTable realcmds = cht_init(lines.size); // Initializes a Hash Table of actual commands
+	Vector aliases = vect_init(lines.size); // Initializes an Array of Aliases
+	HashTable realcmds = ht_init(lines.size); // Initializes a Hash Table of actual commands
 	for (int i = 0; i < lines.size; i++) {
 		char* line = get(&lines, i).String; // A line in the file
 		char* alias = substring(line, 0, indexOf(line, BLANK_SPACE)); // The command alias (KEY)
 		char* realcmd = substring(line, indexOf(line, '\'')+1, strlen(line)-1); // The real command being run (VALUE)
-		set(&aliases, i, (GenericType) alias);
+		set(&aliases, i, (GenType) alias);
 		map(&realcmds, alias, realcmd);
 		release(realcmd); // Deletes Real Command buffer
 		release(line); // Deletes Line buffer
@@ -226,17 +226,17 @@ int main(void) {
 			}
 			else if (!strcmp(input, "clear")) clearScreen(input);
 			else {
-		 		CVector tokens = cvect_split(input, " "); // User input tokens
+		 		Vector tokens = vect_split(input, " "); // User input tokens
 				//========================================================================================
 				// Injecting the real commands into user input before running.
 				int lcount = 0; // Iteration Counter
 				char argBuff[BUFFER_SIZE];
-				CVector args;
+				Vector args;
 				for (int i = 0; lcount < aliases.size; i++) {
 					if (i >= aliases.size) i = 0;
 					if (!strcmp(get(&tokens, 0).String, get(&aliases, i).String)) { // Does the command have an alias?
 						strcpy(argBuff, lookUp(&realcmds, get(&tokens, 0).String).String);
-						args = cvect_split(argBuff, " ");
+						args = vect_split(argBuff, " ");
 						for (int j = args.size-1; j > 0; j--)
 							add(&tokens, 1, get(&args, j));
 						release(args.array); /* Deletes the Alias line buffer if the input
