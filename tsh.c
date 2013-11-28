@@ -124,7 +124,7 @@ void execute(char** extArgv) {
 	if (childPID >= 0) { // Was fork successful?
 		if (childPID == 0) {
 			if (execvp(extArgv[0], extArgv) == -1) { // Run child process
-				perror("tsh");
+				printf("tsh: \'%s\' is not a recognized command...\n", extArgv[0]);
 				exit(EXIT_FAILURE);
 			}
 		} else wait(&childExitStatus); // Parent (this) process waits for child to finish
