@@ -29,9 +29,9 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
-#include <CHashTable.h> // I added a directory to my C Include Path
-#include <CVector.h>    // which is why I am using the Arrows.
-#include <strutil.h>    // Normally just use Double Quotes.
+#include "data-structs/hash.h"
+#include "data-structs/vector.h"
+#include "strutil.h"
 
 #define STRING_END '\0' // Null terminator, marks end of a string.
 #define BLANK_SPACE 32  // The ASCII value for the Space character.
