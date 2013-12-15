@@ -22,7 +22,7 @@
 	SOFTWARE.
 ***************************************************************************/
 
-/* Standard: gnu99 */
+// Standard: gnu99
 
 #include <errno.h>
 #include <signal.h>
@@ -38,6 +38,7 @@
 
 #include "data-structs/hash.h"
 #include "data-structs/vector.h"
+//#include "redirection.h"
 #include "strutil.h"
 
 #define STRING_END '\0' // Null terminator, marks end of a string.
@@ -59,6 +60,8 @@ void release(void* ptr) {
 
 /*
  * Clears the terminal screen and sets the cursor to the top-left corner
+ * Although linux has its own clear command, I kept this for the sake of
+ * introducing myself to ANSI Escape Codes.
  * Argument(s):
  *   char* inputPtr, a pointer to user input.
  * Memory Management:
@@ -280,3 +283,7 @@ int main(void) {
 	//====================================================================================================
 	return 0;
 }
+
+#undef BUFFER_SIZE
+#undef BLANK_SPACE
+#undef STRING_END
