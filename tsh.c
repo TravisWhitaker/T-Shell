@@ -151,8 +151,8 @@ void execute(char** extArgv) {
 Vector readFile(char* fileDir, char* fileName) {
 	Vector contents = vect_init(0);
 	char filePath[11]; // File path buffer, sized for '.tsh_alias'
-	strcpy(filePath, fileDir);
-	strcat(filePath, fileName);
+	strncpy(filePath, fileDir, sizeof(filePath));
+	strncat(filePath, fileName, sizeof(filePath));
 	FILE* file = fopen(filePath, "r");
 	if (file != NULL) {
 		char line[BUFFER_SIZE];
@@ -218,7 +218,7 @@ int main(void) {
 			for (int i = 0; i < strlen(relativeDir); i++)
 				prompt[9+i] = relativeDir[i];
 		} else prompt[9] = '/';
-		strcat(prompt, ")> \0");
+		strncat(prompt, ")> \0", sizeof(prompt));
 		release(relativeDir); // Frees directory name buffer
 		//================================================================================================
 		char* input = readline(prompt);
@@ -242,7 +242,7 @@ int main(void) {
 				for (int i = 0; lcount < aliases.size; i++) {
 					if (i >= aliases.size) i = 0;
 					if (!strcmp(get(&tokens, 0).String, get(&aliases, i).String)) { // Does the command have an alias?
-						strcpy(argBuff, lookUp(&realcmds, get(&tokens, 0).String).String);
+						strncpy(argBuff, lookUp(&realcmds, get(&tokens, 0).String).String, sizeof(argBuff));
 						args = vect_split(argBuff, " ");
 						for (int j = args.size-1; j > 0; j--)
 							add(&tokens, 1, get(&args, j));
