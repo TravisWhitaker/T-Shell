@@ -32,7 +32,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-//#include "redirection.h"
+#include "redirection.h"
 
 typedef struct redirection_symbol {
 	char* symbol;
@@ -52,7 +52,6 @@ char** __args_in_range(char* argv[], int start, int end) {
 }
 
 void __find_symbol(int argc, char* argv[], const char* symbol, redir_sym* rsym) {
-	//         = 2 <-- main
 	for (int i = 1; i < (argc-1); i++) {
 		if (!strcmp(argv[i], symbol)) {
 			rsym->symbol = argv[i];
@@ -68,9 +67,21 @@ int redirect_in(int argc, char* argv[]) {
 	if (isym.symbol != NULL) {
 		char** before = __args_in_range(argv, 1, isym.index);
 		char** after = __args_in_range(argv, isym.index+1, argc);
-		// Operations here
-		return 1; // Success
-	} else return 0; // Fail
+		int ret;
+		pid_t childPID = fork();
+		FILE* inf = fopen(after[0], "r");
+		if (childPID == 0) { // Child
+        	dup2(fileno(inf), 0); // Make tmpfile be the read end
+        	if (execvp(before[0], before)) {
+				perror(before[0]);
+				exit(EXIT_FAILURE);
+			}
+		} else wait(&ret); // Parent
+		fclose(inf);
+		free(before);
+		free(after);
+		return REDIRECT_SUCCESS;
+	} else return REDIRECT_FAILURE;
 }
 
 int redirect_out(int argc, char* argv[]) {
@@ -97,16 +108,14 @@ int redirect_out(int argc, char* argv[]) {
 		FILE* outf = fopen(after[0], "w+");
 		FILE* inf = fdopen(filedes[0], "r");
 		char buffer[64];
-		while (fgets(buffer, 64, inf) != NULL) {
+		while (fgets(buffer, 64, inf) != NULL)
 			fprintf(outf, "%s", buffer);
-			printf("%s", buffer);
-		}
 		fclose(outf);
 		fclose(inf);
 		free(before);
 		free(after);
-		return 1; // Success
-	} else return 0; // Fail
+		return REDIRECT_SUCCESS;
+	} else return REDIRECT_FAILURE;
 }
 
 int redirect_pipe(int argc, char* argv[]) {
@@ -145,18 +154,6 @@ int redirect_pipe(int argc, char* argv[]) {
 		}
 		free(before);
 		free(after);
-		return 1; // Success
-	} else return 0; // Fail
+		return REDIRECT_SUCCESS;
+	} else return REDIRECT_FAILURE;
 }
-
-int main(int argc, char* argv[]) {
-	//redirect_out(argc, argv);
-	//redirect_pipe(argc, argv);
-	return 0;
-}
-/*
- * Parent recieves data from child:
- * 		parent closes filedes[1] (write)
- *		child closes filedes[0] (read)
- * Vice versa for parent sending data
- */
