@@ -16,6 +16,7 @@
     	- Using Header files.
     	- Using Macros
     - Managing Memory.
+    - File I/O
     - Signal Handling (Very Basic).
     - Redirection
   
