@@ -38,7 +38,7 @@
 
 #include "data-structs/hash.h"
 #include "data-structs/vector.h"
-//#include "redirection.h"
+#include "redirection.h"
 #include "strutil.h"
 
 #define STRING_END '\0' // Null terminator, marks end of a string.
@@ -264,7 +264,10 @@ int main(void) {
 					for (int j = 0; j < tokens.size; j++)
 						extArgv[j] = get(&tokens, j).String;
 					extArgv[tokens.size] = NULL;
-					execute(extArgv); // Executes the external program
+					if (!redirect_in(tokens.size+1, extArgv) &&
+						!redirect_out(tokens.size+1, extArgv) &&
+						!redirect_pipe(tokens.size+1, extArgv)
+					) execute(extArgv); // Executes the external program
 					//--------------------------------------------------------------------------------
 				}
 				release(tokens.array); // Deletes the input tokens

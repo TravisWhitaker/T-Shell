@@ -65,7 +65,7 @@ int redirect_in(int argc, char* argv[]) {
 	redir_sym isym = {NULL, 0};
 	__find_symbol(argc, argv, "<", &isym);
 	if (isym.symbol != NULL) {
-		char** before = __args_in_range(argv, 1, isym.index);
+		char** before = __args_in_range(argv, 0, isym.index);
 		char** after = __args_in_range(argv, isym.index+1, argc);
 		int ret;
 		pid_t childPID = fork();
@@ -88,7 +88,7 @@ int redirect_out(int argc, char* argv[]) {
 	redir_sym osym = {NULL, 0};
 	__find_symbol(argc, argv, ">", &osym);
 	if (osym.symbol != NULL) {
-		char** before = __args_in_range(argv, 1, osym.index);
+		char** before = __args_in_range(argv, 0, osym.index);
 		char** after = __args_in_range(argv, osym.index+1, argc);
 		int ret;
 		int filedes[2];
@@ -122,7 +122,7 @@ int redirect_pipe(int argc, char* argv[]) {
 	redir_sym psym = {NULL, 0};
 	__find_symbol(argc, argv, "|", &psym);
 	if (psym.symbol != NULL) {
-		char** before = __args_in_range(argv, 1, psym.index);
+		char** before = __args_in_range(argv, 0, psym.index);
 		char** after = __args_in_range(argv, psym.index+1, argc);
 		int ret;
 	    int filedes[2];
