@@ -24,6 +24,7 @@
 
   - The characteristics of a [Command Line Shell][Shell]
     - Redirection
+  
   - Creating new processes ([Forking][Fork])
   - How to use [Valgrind][Valgrind].
   - What [ANSI Escape Codes][ANSI Escape Codes] are and how to use some.
