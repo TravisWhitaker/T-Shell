@@ -18,12 +18,12 @@
     - Managing Memory.
     - File I/O
     - Signal Handling (Very Basic).
-    - Redirection
   
   - How higher level functionality can be implemented:
     - Using unions to implement [Generic Types][Generic Programming]
 
   - The characteristics of a [Command Line Shell][Shell]
+    - Redirection
   - Creating new processes ([Forking][Fork])
   - How to use [Valgrind][Valgrind].
   - What [ANSI Escape Codes][ANSI Escape Codes] are and how to use some.
