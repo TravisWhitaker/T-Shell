@@ -24,10 +24,9 @@
     - Managing Memory.
     - File I/O
     - Signal Handling (Very Basic).
-  
-  - Ways to implement higher level functionality:
-    - Using unions to implement [Generic Types][Generics]
-    - Using structs for pseudo [Object-Oriented Programming][OOP]
+    - Ways to implement higher level functionality:
+      - Using unions to implement [Generic Types][Generics]
+      - Using structs for pseudo [Object-Oriented Programming][OOP]
 
   - The characteristics / common features of a [Command Line Shell][Shell]
     - Command Aliasing
