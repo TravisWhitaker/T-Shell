@@ -33,9 +33,10 @@
     - Command Aliasing
     - [Redirection][Redirection]
   
-  - Creating new processes ([Forking][Fork])
-  - How to use [Valgrind][Valgrind].
+  - Creating new processes ([Forking][Fork]).
   - What [ANSI Escape Codes][ANSI Escape Codes] are and how to use some.
+  - How to use [Makefiles][Makefile].
+  - How to use [Valgrind][Valgrind].
   - (More information coming soon.)
 
 ***
@@ -58,6 +59,7 @@
 [Readline]: http://en.wikipedia.org/wiki/GNU_Readline
 [Hash]: https://github.com/tyler-cromwell/Data-Structs/tree/master/hash
 [Vector]: https://github.com/tyler-cromwell/Data-Structs/tree/master/vector
+[Makefile]: http://en.wikipedia.org/wiki/Make_(software)
 [Valgrind]: http://en.wikipedia.org/wiki/Valgrind
 [Fork]: http://en.wikipedia.org/wiki/Fork_(system_call)
 [ANSI Escape Codes]: http://en.wikipedia.org/wiki/ANSI_escape_code
