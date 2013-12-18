@@ -37,7 +37,7 @@
   - What [ANSI Escape Codes][ANSI Escape Codes] are and how to use some.
   - How to use [Makefiles][Makefile].
   - How to use [Valgrind][Valgrind].
-  - Introduced me [Clang][Clang]/[LLVM][LLVM]
+  - Introduced me to [Clang][Clang]/[LLVM][LLVM]
   - (More information coming soon.)
 
 ***
