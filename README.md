@@ -47,6 +47,7 @@
   - readline ([GNU Readline][Readline])
   - Data-Structs/[hash][Hash]
   - Data-Structs/[vector][Vector]
+  - [StrUtil][StrUtil]
 
 ***
 
@@ -61,6 +62,7 @@
 [Readline]: http://en.wikipedia.org/wiki/GNU_Readline
 [Hash]: https://github.com/tyler-cromwell/Data-Structs/tree/master/hash
 [Vector]: https://github.com/tyler-cromwell/Data-Structs/tree/master/vector
+[StrUtil]: https://github.com/tyler-cromwell/StrUtil
 [Makefile]: http://en.wikipedia.org/wiki/Make_(software)
 [Valgrind]: http://en.wikipedia.org/wiki/Valgrind
 [Fork]: http://en.wikipedia.org/wiki/Fork_(system_call)
