@@ -1,16 +1,22 @@
-# What is T-Shell?
+# T-Shell
+
+## What is T-Shell?
 
   T-Shell is my first large project in C. It is a Linux Command Line Shell.
   
   (More information coming soon.)
-  
-# Goal
+
+***
+
+## Goal
   I've been using this project as a kind of road-map to follow while I learn [C][C].
   I do intend to (in future releases) make this a comprehensive shell, with capabilities similar to that of [Bash][Bash], [Zsh][Zsh], and [Fish][Fish].
   
   (More information coming soon.)
   
-# Things I've Learned
+***
+  
+## Things I've Learned
   - More about [C][C] in general:
     - Using the Preprocessor.
     	- Using Header files.
@@ -30,13 +36,28 @@
   - Creating new processes ([Forking][Fork])
   - How to use [Valgrind][Valgrind].
   - What [ANSI Escape Codes][ANSI Escape Codes] are and how to use some.
-  - 
-  (More information coming soon.)
+  - (More information coming soon.)
 
-# How to Use:
-  (More information coming soon.)
+***
+
+## Dependencies:
+  - glibc (2.16 or later) ([GNU C Library][GLIBC])
+  - gcc ([GNU Compiler Collection][GCC])
+  - readline ([GNU Readline][Readline])
+  - Data-Structs/[hash][Hash]
+  - Data-Structs/[vector][Vector]
+
+***
+
+## How to Use:
+  - (More information coming soon.)
   
 [C]: http://en.wikipedia.org/wiki/C_(programming_language)
+[GLIBC]: http://en.wikipedia.org/wiki/GNU_C_Library
+[GCC]: http://en.wikipedia.org/wiki/GNU_Compiler_Collection
+[Readline]: http://en.wikipedia.org/wiki/GNU_Readline
+[Hash]: https://github.com/tyler-cromwell/Data-Structs/tree/master/hash
+[Vector]: https://github.com/tyler-cromwell/Data-Structs/tree/master/vector
 [Valgrind]: http://en.wikipedia.org/wiki/Valgrind
 [Fork]: http://en.wikipedia.org/wiki/Fork_(system_call)
 [ANSI Escape Codes]: http://en.wikipedia.org/wiki/ANSI_escape_code
