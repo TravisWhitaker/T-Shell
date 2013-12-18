@@ -153,7 +153,7 @@ void execute(char** extArgv) {
  */
 Vector readFile(char* fileDir, char* fileName) {
 	Vector contents = vect_init(0);
-	char filePath[11]; // File path buffer, sized for '.tsh_alias'
+	char filePath[13]; // File path buffer, sized for '.tsh_alias'
 	strncpy(filePath, fileDir, sizeof(filePath));
 	strncat(filePath, fileName, sizeof(filePath)-strlen(filePath)-1);
 	FILE* file = fopen(filePath, "r");
