@@ -37,13 +37,14 @@
   - What [ANSI Escape Codes][ANSI Escape Codes] are and how to use some.
   - How to use [Makefiles][Makefile].
   - How to use [Valgrind][Valgrind].
+  - Introduced me [Clang][Clang]/[LLVM][LLVM]
   - (More information coming soon.)
 
 ***
 
 ## Dependencies:
   - glibc (2.16 or later) ([GNU C Library][GLIBC])
-  - gcc ([GNU Compiler Collection][GCC])
+  - gcc ([GNU Compiler Collection][GCC]) OR clang ([Clang][Clang]/[LLVM][LLVM])
   - readline ([GNU Readline][Readline])
   - Data-Structs/[hash][Hash]
   - Data-Structs/[vector][Vector]
@@ -56,6 +57,8 @@
 [C]: http://en.wikipedia.org/wiki/C_(programming_language)
 [GLIBC]: http://en.wikipedia.org/wiki/GNU_C_Library
 [GCC]: http://en.wikipedia.org/wiki/GNU_Compiler_Collection
+[Clang]: http://en.wikipedia.org/wiki/Clang
+[LLVM]: http://en.wikipedia.org/wiki/LLVM
 [Readline]: http://en.wikipedia.org/wiki/GNU_Readline
 [Hash]: https://github.com/tyler-cromwell/Data-Structs/tree/master/hash
 [Vector]: https://github.com/tyler-cromwell/Data-Structs/tree/master/vector
