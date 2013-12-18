@@ -155,7 +155,7 @@ Vector readFile(char* fileDir, char* fileName) {
 	Vector contents = vect_init(0);
 	char filePath[11]; // File path buffer, sized for '.tsh_alias'
 	strncpy(filePath, fileDir, sizeof(filePath));
-	strncat(filePath, fileName, sizeof(filePath));
+	strncat(filePath, fileName, sizeof(filePath)-strlen(filePath)-1);
 	FILE* file = fopen(filePath, "r");
 	if (file != NULL) {
 		char line[BUFFER_SIZE];
@@ -221,7 +221,7 @@ int main(void) {
 			for (int i = 0; i < strlen(relativeDir); i++)
 				prompt[9+i] = relativeDir[i];
 		} else prompt[9] = '/';
-		strncat(prompt, ")> \0", sizeof(prompt));
+		strncat(prompt, ")> \0", sizeof(prompt)-strlen(prompt)-1);
 		release(relativeDir); // Frees directory name buffer
 		//================================================================================================
 		char* input = readline(prompt);
@@ -264,9 +264,9 @@ int main(void) {
 					for (int j = 0; j < tokens.size; j++)
 						extArgv[j] = get(&tokens, j).String;
 					extArgv[tokens.size] = NULL;
-					if (!redirect_in(tokens.size+1, extArgv) &&
-						!redirect_out(tokens.size+1, extArgv) &&
-						!redirect_pipe(tokens.size+1, extArgv)
+					if (!redirect_pipe(tokens.size+1, extArgv) &&
+						!redirect_in(tokens.size+1, extArgv) &&
+						!redirect_out(tokens.size+1, extArgv)
 					) execute(extArgv); // Executes the external program
 					//--------------------------------------------------------------------------------
 				}
