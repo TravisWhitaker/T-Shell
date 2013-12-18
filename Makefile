@@ -1,4 +1,4 @@
-CC=gcc
+CC=clang
 CFLAGS=-g -std=gnu99 -Wall -ggdb -lreadline
 SOURCE= $(wildcard tsh.c redirection.c ../lib/*)
 INCLUDE=-I ~/Code/C/Projects/include
