@@ -11,5 +11,5 @@ all:
 install:
 	cp $(EXECUTABLE) /usr/bin/
 
-clean:
-	rm $(EXECUTABLE)
+un-install:
+	rm /usr/bin/$(EXECUTABLE)
