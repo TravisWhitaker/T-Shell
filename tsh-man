@@ -1,0 +1,15 @@
+.\" Manpage for T-Shell.
+.\" Contact tyler@csh.rit.edu to correct errors or typos.
+.TH man 1 "18 December 2013" "1.0" "General Commands Manual"
+.SH NAME
+tsh \- T-Shell
+.SH SYNOPSIS
+tsh
+.SH DESCRIPTION
+T-Shell is a simple Command Line Shell for Linux.
+.SH OPTIONS
+T-Shell does not take any options.
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Tyler Cromwell (tyler@csh.rit.edu)
