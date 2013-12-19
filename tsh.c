@@ -153,11 +153,20 @@ void execute(char** extArgv) {
  */
 Vector readAlias(char* fileName) {
 	Vector contents = vect_init(0);
-	char filePath[strlen("/home/")+strlen(USER)+1+11];
-	strncpy(filePath, "/home/", sizeof(filePath));
-	strncat(filePath, USER, sizeof(filePath)-strlen(USER)-1);
-	strncat(filePath, "/", sizeof(filePath)-strlen("/")-1);
-	strncat(filePath, fileName, sizeof(filePath)-strlen(filePath)-1);
+	int path_size = 0;
+	char* filePath;
+	if (!strcmp(USER, "root"))  {
+		path_size = strlen("/")+strlen(USER)+1+11;
+		filePath = realloc(NULL, path_size * sizeof(char));
+		strncpy(filePath, "/", path_size);
+	} else {
+		path_size = strlen("/home/")+strlen(USER)+1+11;
+		filePath = realloc(NULL, path_size * sizeof(char));
+		strncpy(filePath, "/home/", path_size);
+	}
+	strncat(filePath, USER, path_size-strlen(USER)-1);
+	strncat(filePath, "/", path_size-strlen("/")-1);
+	strncat(filePath, fileName, path_size-strlen(filePath)-1);
 	FILE* file = fopen(filePath, "r");
 	if (file != NULL) {
 		char line[BUFFER_SIZE];
@@ -172,6 +181,7 @@ Vector readAlias(char* fileName) {
 			}
 		fclose(file);
 	}
+	free(filePath);
 	return contents;
 }
 
