@@ -44,6 +44,7 @@
 #define STRING_END '\0' // Null terminator, marks end of a string.
 #define BLANK_SPACE 32  // The ASCII value for the Space character.
 #define BUFFER_SIZE BUFSIZ/32
+#define USER getenv("USER") // User account name
 
 /*
  * Frees the memory pointed to by 'ptr'
@@ -144,17 +145,18 @@ void execute(char** extArgv) {
 /*
  * Reads a given file.
  * Argument(s):
- *   char* fileDir, the path to the file
  *   char** fileName, the file itself
  * Memory Management:
  *   Release the elements in the struct member 'array', and the array itself
  *   (Vector is included from the header file, 'Vector.h')
  * Returns: Array of the lines in the file
  */
-Vector readFile(char* fileDir, char* fileName) {
+Vector readAlias(char* fileName) {
 	Vector contents = vect_init(0);
-	char filePath[13]; // File path buffer, sized for '.tsh_alias'
-	strncpy(filePath, fileDir, sizeof(filePath));
+	char filePath[strlen("/home/")+strlen(USER)+1+11];
+	strncpy(filePath, "/home/", sizeof(filePath));
+	strncat(filePath, USER, sizeof(filePath)-strlen(USER)-1);
+	strncat(filePath, "/", sizeof(filePath)-strlen("/")-1);
 	strncat(filePath, fileName, sizeof(filePath)-strlen(filePath)-1);
 	FILE* file = fopen(filePath, "r");
 	if (file != NULL) {
@@ -196,8 +198,7 @@ int main(void) {
 	                          specifically Ctrl-C (SIGINT) */
 	//====================================================================================================
 	// Alias Initialization
-	Vector lines = readFile(".", "/.tsh_alias"); /* (As of now) the file must be in
-	                                                 the same directory as the executable */
+	Vector lines = readAlias(".tsh-alias");
 	Vector aliases = vect_init(lines.size); // Initializes an Array of Aliases
 	HashTable realcmds = ht_init(lines.size); // Initializes a Hash Table of actual commands
 	for (int i = 0; i < lines.size; i++) {
@@ -287,6 +288,7 @@ int main(void) {
 	return 0;
 }
 
+#undef USER
 #undef BUFFER_SIZE
 #undef BLANK_SPACE
 #undef STRING_END
