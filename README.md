@@ -34,6 +34,7 @@
   
   - Creating new processes ([Forking][Fork]).
   - What [ANSI Escape Codes][ANSI Escape Codes] are and how to use some.
+  - Learned how to write a [Man page][Man page].
   - How to use [Makefiles][Makefile].
   - How to use [Valgrind][Valgrind].
   - Introduced me to [Clang][Clang]/[LLVM][LLVM]
@@ -63,6 +64,7 @@
 [Hash]: https://github.com/tyler-cromwell/Data-Structs/tree/master/hash
 [Vector]: https://github.com/tyler-cromwell/Data-Structs/tree/master/vector
 [StrUtil]: https://github.com/tyler-cromwell/StrUtil
+[Man page]: http://en.wikipedia.org/wiki/Man_page
 [Makefile]: http://en.wikipedia.org/wiki/Make_(software)
 [Valgrind]: http://en.wikipedia.org/wiki/Valgrind
 [Fork]: http://en.wikipedia.org/wiki/Fork_(system_call)
