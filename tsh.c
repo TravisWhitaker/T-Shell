@@ -44,7 +44,6 @@
 #define STRING_END '\0' // Null terminator, marks end of a string.
 #define BLANK_SPACE 32  // The ASCII value for the Space character.
 #define BUFFER_SIZE BUFSIZ/32
-#define USER getenv("USER") // User account name
 
 /*
  * Frees the memory pointed to by 'ptr'
@@ -152,6 +151,7 @@ void execute(char** extArgv) {
  * Returns: Array of the lines in the file
  */
 Vector readAlias(char* fileName) {
+	#define USER getenv("USER") // User account name
 	Vector contents = vect_init(0);
 	int path_size = 0;
 	char* filePath;
@@ -167,10 +167,11 @@ Vector readAlias(char* fileName) {
 	strncat(filePath, USER, path_size-strlen(USER)-1);
 	strncat(filePath, "/", path_size-strlen("/")-1);
 	strncat(filePath, fileName, path_size-strlen(filePath)-1);
+	#undef USER
 	FILE* file = fopen(filePath, "r");
 	if (file != NULL) {
 		char line[BUFFER_SIZE];
-		int i = 0;
+		unsigned int i = 0;
 		while (fgets(line, BUFFER_SIZE, file) != NULL) // While there is something to be read
 			if (strchr(line, '#') == NULL && strlen(line) != 1) { // Ignores comments and empty lines
 				char* modLine = calloc(strlen(line), sizeof(char)); // Line buffer
@@ -211,7 +212,7 @@ int main(void) {
 	Vector lines = readAlias(".tsh-alias");
 	Vector aliases = vect_init(lines.size); // Initializes an Array of Aliases
 	HashTable realcmds = ht_init(lines.size); // Initializes a Hash Table of actual commands
-	for (int i = 0; i < lines.size; i++) {
+	for (unsigned int i = 0; i < lines.size; i++) {
 		char* line = get(&lines, i).String; // A line in the file
 		char* alias = substring(line, 0, indexOf(line, BLANK_SPACE)); // The command alias (KEY)
 		char* realcmd = substring(line, indexOf(line, '\'')+1, strlen(line)-1); // The real command being run (VALUE)
@@ -229,7 +230,7 @@ int main(void) {
 		char prompt[BUFFER_SIZE] = "T-Shell: ";
 		/* Block 1
 		Here */if (strlen(relativeDir) > 0) {
-			for (int i = 0; i < strlen(relativeDir); i++)
+			for (unsigned int i = 0; i < strlen(relativeDir); i++)
 				prompt[9+i] = relativeDir[i];
 		} else prompt[9] = '/';
 		strncat(prompt, ")> \0", sizeof(prompt)-strlen(prompt)-1);
@@ -253,12 +254,12 @@ int main(void) {
 				int lcount = 0; // Iteration Counter
 				char argBuff[BUFFER_SIZE];
 				Vector args;
-				for (int i = 0; lcount < aliases.size; i++) {
+				for (unsigned int i = 0; lcount < aliases.size; i++) {
 					if (i >= aliases.size) i = 0;
 					if (!strcmp(get(&tokens, 0).String, get(&aliases, i).String)) { // Does the command have an alias?
 						strncpy(argBuff, lookUp(&realcmds, get(&tokens, 0).String).String, sizeof(argBuff));
 						args = vect_split(argBuff, " ");
-						for (int j = args.size-1; j > 0; j--)
+						for (unsigned int j = args.size-1; j > 0; j--)
 							add(&tokens, 1, get(&args, j));
 						release(args.array); /* Deletes the Alias line buffer if the input
 						                        command did not match the current key */
@@ -272,7 +273,7 @@ int main(void) {
 					//--------------------------------------------------------------------------------
 					// Sets up argv, then runs the command
 					char* extArgv[tokens.size+1];
-					for (int j = 0; j < tokens.size; j++)
+					for (unsigned int j = 0; j < tokens.size; j++)
 						extArgv[j] = get(&tokens, j).String;
 					extArgv[tokens.size] = NULL;
 					if (!redirect_pipe(tokens.size+1, extArgv) &&
@@ -288,7 +289,7 @@ int main(void) {
 	}
 	//====================================================================================================
 	// Alias Freeing
-	for (int i = 0; i < aliases.size; i++) {
+	for (unsigned int i = 0; i < aliases.size; i++) {
 		unmap(&realcmds, get(&aliases, i).String); // Deletes a Bucket
 		release(get(&aliases, i).String); // Deletes a Key
 	}
@@ -298,7 +299,6 @@ int main(void) {
 	return 0;
 }
 
-#undef USER
 #undef BUFFER_SIZE
 #undef BLANK_SPACE
 #undef STRING_END

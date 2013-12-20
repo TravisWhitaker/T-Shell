@@ -36,13 +36,13 @@
 
 typedef struct redirection_symbol {
 	char* symbol;
-	int index;
+	unsigned int index;
 } redir_sym;
 
 char** __args_in_range(char* argv[], int start, int end) {
 	char** args = NULL;
-	int index;
-	for (int i = start; i < (end+1); i++) {
+	unsigned int index;
+	for (unsigned int i = start; i < (end+1); i++) {
 		index = i-start;
 		args = realloc(args, (index+1) * sizeof(char*));
 		if (i == end) args[index] = NULL;
@@ -52,7 +52,7 @@ char** __args_in_range(char* argv[], int start, int end) {
 }
 
 void __find_symbol(int argc, char* argv[], const char* symbol, redir_sym* rsym) {
-	for (int i = 1; i < (argc-1); i++) {
+	for (unsigned int i = 1; i < (argc-1); i++) {
 		if (!strcmp(argv[i], symbol)) {
 			rsym->symbol = argv[i];
 			rsym->index = i;
@@ -71,8 +71,8 @@ int redirect_in(int argc, char* argv[]) {
 		pid_t childPID = fork();
 		FILE* inf = fopen(after[0], "r");
 		if (childPID == 0) { // Child
-        	dup2(fileno(inf), 0); // Make tmpfile be the read end
-        	if (execvp(before[0], before)) {
+			dup2(fileno(inf), 0); // Make inf be the read end
+			if (execvp(before[0], before)) {
 				perror(before[0]);
 				exit(EXIT_FAILURE);
 			}
@@ -95,9 +95,9 @@ int redirect_out(int argc, char* argv[]) {
 		pipe(filedes);
 		pid_t childPID = fork();
 		if (childPID == 0) { // Child
-    		close(filedes[0]);
-        	dup2(filedes[1], 1); // Make stdout be the write end
-        	if (execvp(before[0], before)) {
+			close(filedes[0]);
+			dup2(filedes[1], 1); // Make stdout be the write end
+			if (execvp(before[0], before)) {
 				perror(before[0]);
 				exit(EXIT_FAILURE);
 			}
@@ -125,31 +125,31 @@ int redirect_pipe(int argc, char* argv[]) {
 		char** before = __args_in_range(argv, 0, psym.index);
 		char** after = __args_in_range(argv, psym.index+1, argc);
 		int ret;
-	    int filedes[2];
+		int filedes[2];
 		pipe(filedes);
 		pid_t childPID = fork();
-    	if (childPID == 0) { // Child
-    		close(filedes[0]);
-        	dup2(filedes[1], 1); // Make stdout be the write end
-        	if (execvp(before[0], before)) {
+		if (childPID == 0) { // Child
+			close(filedes[0]);
+			dup2(filedes[1], 1); // Make stdout be the write end
+			if (execvp(before[0], before)) {
 				perror(before[0]);
 				exit(EXIT_FAILURE);
 			}
-    	} else { // Parent
-        	close(filedes[1]);
+		} else { // Parent
+			close(filedes[1]);
 			wait(&ret);
-    	}
-    	childPID = fork();
-    	if (childPID == 0) { // Child
-    		close(filedes[1]);
-        	dup2(filedes[0], 0); // Make stdin be the read end
-        	if (execvp(after[0], after)) {
+		}
+		childPID = fork();
+		if (childPID == 0) { // Child
+			close(filedes[1]);
+			dup2(filedes[0], 0); // Make stdin be the read end
+			if (execvp(after[0], after)) {
 				perror(after[0]);
 				exit(EXIT_FAILURE);
-			}        	
-    	}
-    	else { // Parent
-        	close(filedes[0]);
+			}
+		}
+		else { // Parent
+			close(filedes[0]);
 			wait(&ret);
 		}
 		free(before);
