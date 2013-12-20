@@ -110,11 +110,9 @@ char* currentDir(void) {
 	getcwd(absoluteBuffer, BUFFER_SIZE);
 	char* relativePath = strrchr(absoluteBuffer, '/'); // Relative path buffer
 	char* relativeBuffer = calloc(strlen(relativePath), sizeof(char));
-	int i = 0;
-	while (i < (strlen(relativePath)-1)) {
+	unsigned int i = 0;
+	for (; i < (strlen(relativePath)-1); i++)
 		relativeBuffer[i] = relativePath[i+1];
-		i++;
-	}
 	relativeBuffer[i] = STRING_END;
 	return relativeBuffer;
 }
@@ -251,7 +249,7 @@ int main(void) {
 		 		Vector tokens = vect_split(input, " "); // User input tokens
 				//========================================================================================
 				// Injecting the real commands into user input before running.
-				int lcount = 0; // Iteration Counter
+				unsigned int lcount = 0; // Iteration Counter
 				char argBuff[BUFFER_SIZE];
 				Vector args;
 				for (unsigned int i = 0; lcount < aliases.size; i++) {
