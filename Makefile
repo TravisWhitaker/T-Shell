@@ -1,7 +1,7 @@
 CC=clang
 CFLAGS=-std=gnu99 -Wall -g -ggdb -lreadline
 SOURCE= $(wildcard ./*.c ./lib/*)
-INCLUDE=-I ~/Code/C/Projects/include
+INCLUDE=-I ./include
 OUT=-o
 EXECUTABLE=tsh
 
