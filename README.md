@@ -52,8 +52,13 @@
 
 ***
 
-## How to Use:
-  - (More information coming soon.)
+## How to Install:
+  To install, do the following...<br />
+    1) Dowload the zip file from the link on the right.<br />
+    2) `unzip master.zip`<br />
+    3) `cd T-Shell-master`<br />
+    4) `make`<br />
+    5) `[sudo] make install`
   
 [C]: http://en.wikipedia.org/wiki/C_(programming_language)
 [GLIBC]: http://en.wikipedia.org/wiki/GNU_C_Library
