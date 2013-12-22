@@ -34,7 +34,7 @@
   
   - Creating new processes ([Forking][Fork]).
   - What [ANSI Escape Codes][ANSI Escape Codes] are and how to use some.
-  - Learned how to write a [Man page][Man page].
+  - How to write a [Man page][Man page].
   - How to use [Makefiles][Makefile].
   - How to use [Valgrind][Valgrind].
   - Introduced me to [Clang][Clang]/[LLVM][LLVM]
