@@ -36,10 +36,10 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
-#include "data-structs/hash.h"
-#include "data-structs/vector.h"
+#include "include/hash.h"
 #include "redirection.h"
-#include "strutil.h"
+#include "include/strutil.h"
+#include "include/vector.h"
 
 #define STRING_END '\0' // Null terminator, marks end of a string.
 #define BLANK_SPACE 32  // The ASCII value for the Space character.
