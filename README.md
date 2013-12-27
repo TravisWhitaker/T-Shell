@@ -2,14 +2,15 @@
 
 ## What is T-Shell?
 
-  T-Shell is my first large project in C. It is a Linux Command Line Shell.
+  T-Shell is my first large project in [C][C]. It is a [Linux][Linux] [Command Line Shell][Shell].
   
   (More information coming soon.)
 
 ***
 
 ## Goal
-  I've been using this project as a kind of road-map to follow while I learn [C][C].
+  I've been using this project as a kind of road-map to follow while I learn [C][C]. In addition to that, I've been learning more about [Command Line Shells][Shell] and [Linux][Linux].
+  
   I do intend to (in future releases) make this a comprehensive shell, with capabilities similar to that of [Bash][Bash], [Zsh][Zsh], and [Fish][Fish].
   
   (More information coming soon.)
@@ -23,7 +24,7 @@
     	- Using Macros
     - Managing Memory.
     - File I/O
-    - Signal Handling (Very Basic).
+    - [Signal][Signal] Handling (Very Basic).
     - Ways to implement higher level functionality:
       - Using unions to implement [Generic Types][Generics]
       - Using structs for pseudo [Object-Oriented Programming][OOP]
@@ -34,7 +35,7 @@
   
   - Creating new processes ([Forking][Fork]).
   - What [ANSI Escape Codes][ANSI Escape Codes] are and how to use some.
-  - Learned how to write a [Man page][Man page].
+  - How to write a [Man page][Man page].
   - How to use [Makefiles][Makefile].
   - How to use [Valgrind][Valgrind].
   - Introduced me to [Clang][Clang]/[LLVM][LLVM]
@@ -77,6 +78,8 @@
 [Generics]: http://en.wikipedia.org/wiki/Generic_programming
 [OOP]: http://en.wikipedia.org/wiki/Object-oriented_programming
 [Redirection]: http://en.wikipedia.org/wiki/Redirection_(computing)
+[Linux]: http://en.wikipedia.org/wiki/Linux
+[Signal]: http://en.wikipedia.org/wiki/Unix_signal
 [Shell]: http://en.wikipedia.org/wiki/Shell_(computing)
 [Bash]: http://en.wikipedia.org/wiki/Bash_(Unix_shell)
 [Zsh]: http://en.wikipedia.org/wiki/Z_shell
