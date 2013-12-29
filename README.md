@@ -3,8 +3,6 @@
 ## What is T-Shell?
 
   T-Shell is my first large project in [C][C]. It is a [Linux][Linux] [Command Line Shell][Shell].
-  
-  (More information coming soon.)
 
 ***
 
@@ -12,8 +10,6 @@
   I've been using this project as a kind of road-map to follow while I learn [C][C]. In addition to that, I've been learning more about [Command Line Shells][Shell] and [Linux][Linux].
   
   I do intend to (in future releases) make this a comprehensive shell, with capabilities similar to that of [Bash][Bash], [Zsh][Zsh], and [Fish][Fish].
-  
-  (More information coming soon.)
   
 ***
   
@@ -39,7 +35,6 @@
   - How to use [Makefiles][Makefile].
   - How to use [Valgrind][Valgrind].
   - Introduced me to [Clang][Clang]/[LLVM][LLVM]
-  - (More information coming soon.)
 
 ***
 
@@ -54,12 +49,15 @@
 ***
 
 ## How to Install:
-  To install, do the following...<br />
-    1) Dowload the zip file from the link on the right.<br />
-    2) `unzip master.zip`<br />
-    3) `cd T-Shell-master`<br />
-    4) `make`<br />
-    5) `[sudo] make install`
+  To install, do the following...<br>
+    1) Dowload the zip file from the link on the right.<br>
+    2) `unzip master.zip`<br>
+    3) `cd T-Shell-master`<br>
+    4) `make`<br>
+    5) `[sudo] make install`<br><br>
+  Notes:<br>
+  1) The Makefile specifies [Clang][Clang]/[LLVM][LLVM] as the compiler, feel free to change that.<br>
+  2) You should add T-Shell to /etc/shells (insert line: `/usr/bin/tsh`).
   
 [C]: http://en.wikipedia.org/wiki/C_(programming_language)
 [GLIBC]: http://en.wikipedia.org/wiki/GNU_C_Library
