@@ -10,7 +10,7 @@ all:
 
 install:
 	mv ./$(EXECUTABLE) /usr/bin/
-	#Add to /etc/shells
+	echo "/usr/bin/tsh" >> /etc/shells
 	cp tsh-man /usr/share/man/man1/$(EXECUTABLE).1
 	gzip -f /usr/share/man/man1/$(EXECUTABLE).1
 
