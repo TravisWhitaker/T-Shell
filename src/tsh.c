@@ -142,7 +142,7 @@ Vector readAlias(char* fileName) {
 	strncat(filePath, "/", path_size-strlen("/")-1);
 	strncat(filePath, fileName, path_size-strlen(filePath)-1);
 	#undef USER
-	FILE* file = fopen(filePath, "r");
+	FILE* file = fopen(filePath, "a+");
 	if (file != NULL) {
 		char line[BUFFER_SIZE];
 		unsigned int i = 0;
