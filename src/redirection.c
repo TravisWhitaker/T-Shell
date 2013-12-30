@@ -15,7 +15,7 @@ typedef struct redirection_symbol {
 	unsigned int index;
 } redir_sym;
 
-char** __args_in_range(char* argv[], int start, int end) {
+static char** args_in_range(char* argv[], int start, int end) {
 	char** args = NULL;
 	unsigned int index;
 	for (unsigned int i = start; i < (end+1); i++) {
@@ -27,7 +27,7 @@ char** __args_in_range(char* argv[], int start, int end) {
 	return args;
 }
 
-void __find_symbol(int argc, char* argv[], const char* symbol, redir_sym* rsym) {
+static void find_symbol(int argc, char* argv[], const char* symbol, redir_sym* rsym) {
 	for (unsigned int i = 1; i < (argc-1); i++) {
 		if (!strcmp(argv[i], symbol)) {
 			rsym->symbol = argv[i];
@@ -39,12 +39,12 @@ void __find_symbol(int argc, char* argv[], const char* symbol, redir_sym* rsym) 
 
 int redirect_in(int argc, char* argv[]) {
 	redir_sym isym = {NULL, 0};
-	__find_symbol(argc, argv, "<", &isym);
+	find_symbol(argc, argv, "<", &isym);
 	// '<' takes input from
 	// '<<' 
 	if (isym.symbol != NULL) {
-		char** before = __args_in_range(argv, 0, isym.index);
-		char** after = __args_in_range(argv, isym.index+1, argc);
+		char** before = args_in_range(argv, 0, isym.index);
+		char** after = args_in_range(argv, isym.index+1, argc);
 		int ret;
 		pid_t childPID = fork();
 		FILE* inf = fopen(after[0], "r");
@@ -64,12 +64,12 @@ int redirect_in(int argc, char* argv[]) {
 
 int redirect_out(int argc, char* argv[]) {
 	redir_sym osym = {NULL, 0};
-	__find_symbol(argc, argv, ">", &osym);
+	find_symbol(argc, argv, ">", &osym);
 	// '>' overwrites the file
 	// '>>' appends to the file
 	if (osym.symbol != NULL) {
-		char** before = __args_in_range(argv, 0, osym.index);
-		char** after = __args_in_range(argv, osym.index+1, argc);
+		char** before = args_in_range(argv, 0, osym.index);
+		char** after = args_in_range(argv, osym.index+1, argc);
 		int ret;
 		int filedes[2];
 		pipe(filedes);
@@ -100,10 +100,10 @@ int redirect_out(int argc, char* argv[]) {
 
 int redirect_pipe(int argc, char* argv[]) {
 	redir_sym psym = {NULL, 0};
-	__find_symbol(argc, argv, "|", &psym);
+	find_symbol(argc, argv, "|", &psym);
 	if (psym.symbol != NULL) {
-		char** before = __args_in_range(argv, 0, psym.index);
-		char** after = __args_in_range(argv, psym.index+1, argc);
+		char** before = args_in_range(argv, 0, psym.index);
+		char** after = args_in_range(argv, psym.index+1, argc);
 		int ret;
 		int filedes[2];
 		pipe(filedes);

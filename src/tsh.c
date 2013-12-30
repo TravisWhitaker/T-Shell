@@ -29,7 +29,7 @@
  *   Nothing to worry about here.
  * Returns: void
  */
-void release(void* ptr) {
+static void release(void* ptr) {
 	free(ptr);
 	ptr = NULL;
 }
@@ -44,7 +44,7 @@ void release(void* ptr) {
  *   Nothing to worry about here.
  * Return(s): void
  */
-void clearScreen(char* inputPtr) {
+static void clearScreen(char* inputPtr) {
 	printf("%c[2J%c[1;1H", 27, 27); /* Clears the Screen and
 	                                   resets Cursor position */
 	rewind(stdout); /* Sets the stream position indicator
@@ -62,7 +62,7 @@ void clearScreen(char* inputPtr) {
  *   Nothing to worry about here.
  * Return(s): void
  */
-void changeDir(Vector* tokens, int size) {
+static void changeDir(Vector* tokens, int size) {
 	if (size == 2) {
 		if (chdir(get(tokens, 1).String) == -1)
 			perror("tsh"); // Can't change directory
@@ -81,7 +81,7 @@ void changeDir(Vector* tokens, int size) {
  *   free the pointer to the path when done.
  * Returns: A pointer to name of the current directory
  */
-char* currentDir(void) {
+static char* currentDir(void) {
 	char absoluteBuffer[BUFFER_SIZE] = ""; // Absolute path buffer
 	getcwd(absoluteBuffer, BUFFER_SIZE);
 	char* relativePath = strrchr(absoluteBuffer, '/'); // Relative path buffer
@@ -101,7 +101,7 @@ char* currentDir(void) {
  *   Nothing to worry about here
  * Returns: void
  */
-void execute(char** extArgv) {
+static void execute(char** extArgv) {
 	int childExitStatus;
 	pid_t childPID = fork(); /* Creates a new process for an
 	                            external program to run in */
@@ -124,7 +124,7 @@ void execute(char** extArgv) {
  *   (Vector is included from the header file, 'Vector.h')
  * Returns: Array of the lines in the file
  */
-Vector readAlias(char* fileName) {
+static Vector readAlias(char* fileName) {
 	#define USER getenv("USER") // User account name
 	Vector contents = vect_init(0);
 	int path_size = 0;
@@ -168,7 +168,7 @@ Vector readAlias(char* fileName) {
  *   Nothing to worry about here
  * Return(s): void
  */
-void ctrlC() {}
+static void ctrlC() {}
 
 /*
  * The Shells main function, most of the work is done in here.
