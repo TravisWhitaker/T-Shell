@@ -8,11 +8,11 @@ typedef struct Vector {
 	GenType* array;
 } Vector;
 
-Vector vect_init(int size);
-void empty(Vector* listPtr);
-GenType get(Vector* listPtr, int index);
-void set(Vector* listPtr, int index, GenType value);
-void add(Vector* listPtr, int index, GenType value);
-void delete(Vector* listPtr, int index);
+extern Vector vect_init(int size);
+extern void empty(Vector* listPtr);
+extern GenType get(Vector* listPtr, int index);
+extern void set(Vector* listPtr, int index, GenType value);
+extern void add(Vector* listPtr, int index, GenType value);
+extern void delete(Vector* listPtr, int index);
 
 #endif

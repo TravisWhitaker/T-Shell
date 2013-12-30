@@ -8,10 +8,10 @@ typedef struct {
 	GenType* table;
 } HashTable;
 
-HashTable ht_init(int size);
-int hash(char* key, int tableSize);
-GenType lookUp(HashTable* tablePtr, char* key);
-void map(HashTable* tablePtr, char* key, char* value);
-void unmap(HashTable* tablePtr, char* key);
+extern HashTable ht_init(int size);
+extern int hash(char* key, int tableSize);
+extern GenType lookUp(HashTable* tablePtr, char* key);
+extern void map(HashTable* tablePtr, char* key, char* value);
+extern void unmap(HashTable* tablePtr, char* key);
 
 #endif
