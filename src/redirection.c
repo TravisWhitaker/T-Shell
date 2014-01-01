@@ -40,8 +40,6 @@ static void find_symbol(int argc, char* argv[], const char* symbol, redir_sym* r
 int redirect_in(int argc, char* argv[]) {
 	redir_sym isym = {NULL, 0};
 	find_symbol(argc, argv, "<", &isym);
-	// '<' takes input from
-	// '<<' 
 	if (isym.symbol != NULL) {
 		char** before = args_in_range(argv, 0, isym.index);
 		char** after = args_in_range(argv, isym.index+1, argc);
@@ -65,8 +63,6 @@ int redirect_in(int argc, char* argv[]) {
 int redirect_out(int argc, char* argv[]) {
 	redir_sym osym = {NULL, 0};
 	find_symbol(argc, argv, ">", &osym);
-	// '>' overwrites the file
-	// '>>' appends to the file
 	if (osym.symbol != NULL) {
 		char** before = args_in_range(argv, 0, osym.index);
 		char** after = args_in_range(argv, osym.index+1, argc);
