@@ -18,18 +18,15 @@
 #include "data-structs/vector.h"
 
 #define STRING_END '\0' // Null terminator, marks end of a string.
-#define BLANK_SPACE 32  // The ASCII value for the Space character.
-#define BUFFER_SIZE BUFSIZ/32
+#define BLANK_SPACE 32 // The ASCII value for the Space character.
+#define BUFFER_SIZE BUFSIZ/32 // New buffer size.
 
 /*
  * Frees the memory pointed to by 'ptr'
  * Argument(s):
  *   void* ptr, pointer to ANY allocated memory
- * Memory Management:
- *   Nothing to worry about here.
- * Returns: void
  */
-static void release(void* ptr) {
+static inline void release(void* ptr) {
 	free(ptr);
 	ptr = NULL;
 }
@@ -40,16 +37,13 @@ static void release(void* ptr) {
  * introducing myself to ANSI Escape Codes.
  * Argument(s):
  *   char* inputPtr, a pointer to user input.
- * Memory Management:
- *   Nothing to worry about here.
- * Return(s): void
  */
 static void clearScreen(char* inputPtr) {
 	printf("%c[2J%c[1;1H", 27, 27); /* Clears the Screen and
 	                                   resets Cursor position */
 	rewind(stdout); /* Sets the stream position indicator
 	                   to the beginning of the file */
-	ftruncate(1, 0); // Truncates the given file (from FD) to a given size
+	ftruncate(1, 0); // Truncates the STDOUT (1) to 0 bytes
 	free(inputPtr); // Frees user input
 }
 
@@ -57,28 +51,22 @@ static void clearScreen(char* inputPtr) {
  * Changes the current working directory.
  * Argument(s):
  *   Vector* tokens, a pointer to the tokenized user input
- *   int size, the size of the array of tokens
- * Memory Management:
- *   Nothing to worry about here.
- * Return(s): void
+## *   int size, the size of the array of tokens
  */
-static void changeDir(Vector* tokens, int size) {
-	if (size == 2) {
+static void changeDir(Vector* tokens) {
+	if (tokens->size == 2) {
 		if (chdir(get(tokens, 1).String) == -1)
-			perror("tsh"); // Can't change directory
-	} /* Changes the Current Directory to the given directory
-	     or prints an error if it can't */
-	else if (size == 1) chdir(getenv("HOME"));
-	/* Changes the Current Directory to the user's home directory */
+			perror("tsh");
+	} // Changes to the given directory
+	else if (tokens->size == 1) chdir(getenv("HOME"));
+	// Changes to the user's home directory
 	else printf("tsh: Too many arguments.\n");
 }
 
 /*
  * Gets the current (relative) directory
- * Argument(s):
- *   void
- * Memory Management:
- *   free the pointer to the path when done.
+ * Note for Memory Management:
+ *   Free the returned pointer when done.
  * Returns: A pointer to name of the current directory
  */
 static char* currentDir(void) {
@@ -94,12 +82,9 @@ static char* currentDir(void) {
 }
 
 /*
- * Runs an external program
+ * Runs an external program.
  * Argument(s):
  *   char** extArgv, potential arguments for the program
- * Memory Management:
- *   Nothing to worry about here
- * Returns: void
  */
 static void execute(char** extArgv) {
 	int childExitStatus;
@@ -120,14 +105,14 @@ static void execute(char** extArgv) {
  * Argument(s):
  *   char** fileName, the file itself
  * Memory Management:
- *   Release the elements in the struct member 'array', and the array itself
+ *   Free the elements in the struct member 'array', and the array itself
  *   (Vector is included from the header file, 'Vector.h')
  * Returns: Array of the lines in the file
  */
 static Vector readAlias(char* fileName) {
 	#define USER getenv("USER") // User account name
 	Vector contents = vect_init(0);
-	int path_size = 0;
+	unsigned int path_size = 0;
 	char* filePath;
 	if (!strcmp(USER, "root"))  {
 		path_size = strlen("/")+strlen(USER)+1+11;
@@ -162,26 +147,16 @@ static Vector readAlias(char* fileName) {
 
 /*
  * Defines how Control-C (SIGINT) behaves, by not letting it close the shell.
- * Argument(s):
- *   void
- * Memory Management:
- *   Nothing to worry about here
- * Return(s): void
  */
 static void ctrlC() {}
 
 /*
- * The Shells main function, most of the work is done in here.
- * Argument(s):
- *   void
- * Memory Management:
- *   Nothing to worry about here
- * Returns: status code
+ * The Shells main function.
  */
 int main(void) {
 	signal(SIGINT, ctrlC); /* Sets the behavior for a Control Character,
 	                          specifically Ctrl-C (SIGINT) */
-	//====================================================================================================
+	//==============================================================================================
 	// Alias Initialization
 	Vector lines = readAlias(".tsh-alias");
 	Vector aliases = vect_init(lines.size); // Initializes an Array of Aliases
@@ -196,9 +171,9 @@ int main(void) {
 		release(line); // Deletes Line buffer
 	}
 	release(lines.array); // Deletes the Array of Line buffers
-	//====================================================================================================
+	//==============================================================================================
 	while (true) {
-		//================================================================================================
+		//==========================================================================================
 		// Print Prompt and Current (Relative) Directory
 		char* relativeDir = currentDir();
 		char prompt[BUFFER_SIZE] = "T-Shell: ";
@@ -209,7 +184,7 @@ int main(void) {
 		} else prompt[9] = '/';
 		strncat(prompt, ")> \0", sizeof(prompt)-strlen(prompt)-1);
 		release(relativeDir); // Frees directory name buffer
-		//================================================================================================
+		//==========================================================================================
 		char* input = readline(prompt);
 		add_history(input);
 		if (input == NULL) { // Exits when Ctrl-D is pressed
@@ -223,7 +198,7 @@ int main(void) {
 			else if (!strcmp(input, "clear")) clearScreen(input);
 			else {
 		 		Vector tokens = vect_split(input, " "); // User input tokens
-				//========================================================================================
+				//==================================================================================
 				// Injecting the real commands into user input before running.
 				unsigned int lcount = 0; // Iteration Counter
 				char argBuff[BUFFER_SIZE];
@@ -241,27 +216,27 @@ int main(void) {
 					}
 					lcount++;
 				}
-				//========================================================================================
-				if (!strcmp(get(&tokens, 0).String, "cd")) {changeDir(&tokens, tokens.size);}
+				//==================================================================================
+				if (!strcmp(get(&tokens, 0).String, "cd")) changeDir(&tokens);
 				else {
-					//--------------------------------------------------------------------------------
+					//------------------------------------------------------------------------------
 					// Sets up argv, then runs the command
 					char* extArgv[tokens.size+1];
-					for (unsigned int j = 0; j < tokens.size; j++)
+					for (register unsigned int j = 0; j < tokens.size; j++)
 						extArgv[j] = get(&tokens, j).String;
 					extArgv[tokens.size] = NULL;
 					if (!redirect_pipe(tokens.size+1, extArgv) &&
 						!redirect_in(tokens.size+1, extArgv) &&
 						!redirect_out(tokens.size+1, extArgv)
 					) execute(extArgv); // Executes the external program
-					//--------------------------------------------------------------------------------
+					//------------------------------------------------------------------------------
 				}
 				release(tokens.array); // Deletes the input tokens
 				release(input); // Frees user input
 			}
 		} else release(input); // Frees user input
 	}
-	//====================================================================================================
+	//==============================================================================================
 	// Alias Freeing
 	for (unsigned int i = 0; i < aliases.size; i++) {
 		unmap(&realcmds, get(&aliases, i).String); // Deletes a Bucket
@@ -269,7 +244,7 @@ int main(void) {
 	}
 	release(aliases.array); // Deletes the Array of Aliases
 	release(realcmds.table); // Deletes the Hash Table of Command Aliases
-	//====================================================================================================
+	//==============================================================================================
 	return 0;
 }
 
