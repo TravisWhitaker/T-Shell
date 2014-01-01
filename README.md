@@ -33,10 +33,10 @@
       - Optimizing with keywords like `inline` and `register`.
 
   - The characteristics / common features of a [Command Line Shell][Shell].
-    - Command Aliasing
-    - [Redirection][Redirection]
+    - Command Aliasing.
+    - [Redirection][Redirection].
   
-  - Making System Calls.
+  - Making [System Calls][Syscall].
   - Basic [Signal][Signal] Handling.
   - Creating new processes ([Forking][Fork]).
   - What [ANSI Escape Codes][ANSI Escape Codes] are and how to use some.
@@ -74,6 +74,7 @@
 [Clang]: http://en.wikipedia.org/wiki/Clang
 [LLVM]: http://en.wikipedia.org/wiki/LLVM
 [Preprocessor]: http://en.wikipedia.org/wiki/C_preprocessor
+[Syscall]: http://en.wikipedia.org/wiki/System_call
 [Automatic]: http://en.wikipedia.org/wiki/Automatic_memory_allocation
 [Static]: http://en.wikipedia.org/wiki/Static_memory_allocation
 [Dynamic]: http://en.wikipedia.org/wiki/Dynamic_memory_allocation#Dynamic_memory_allocation
