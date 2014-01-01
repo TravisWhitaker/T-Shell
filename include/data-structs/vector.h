@@ -1,5 +1,5 @@
-#ifndef VECTOR_H_
-#define VECTOR_H_
+#ifndef VECTOR_H
+#define VECTOR_H
 
 #include "data-structs/gentype.h"
 
@@ -8,11 +8,11 @@ typedef struct Vector {
 	GenType* array;
 } Vector;
 
-extern Vector vect_init(int size);
-extern void empty(Vector* listPtr);
-extern GenType get(Vector* listPtr, int index);
-extern void set(Vector* listPtr, int index, GenType value);
-extern void add(Vector* listPtr, int index, GenType value);
-extern void delete(Vector* listPtr, int index);
+extern Vector vector_init(int size);
+extern void vector_empty(Vector* listPtr);
+extern GenType vector_get(Vector* listPtr, int index);
+extern void vector_set(Vector* listPtr, int index, GenType value);
+extern void vector_add(Vector* listPtr, int index, GenType value);
+extern void vector_delete(Vector* listPtr, int index);
 
 #endif

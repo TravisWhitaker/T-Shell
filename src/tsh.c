@@ -56,7 +56,7 @@ static void clearScreen(char* inputPtr) {
  */
 static void changeDir(Vector* tokens) {
 	if (tokens->size == 2) {
-		if (chdir(get(tokens, 1).String) == -1)
+		if (chdir(vector_get(tokens, 1).String) == -1)
 			perror("tsh");
 	} // Changes to the given directory
 	else if (tokens->size == 1) chdir(getenv("HOME"));
@@ -140,7 +140,7 @@ int main(void) {
 			}
 			else if (!strcmp(input, "clear")) clearScreen(input);
 			else {
-		 		Vector tokens = vect_split(input, " "); // User input tokens
+		 		Vector tokens = vector_split(input, " "); // User input tokens
 				//==================================================================================
 				// Injecting the real commands into user input before running.
 				unsigned int lcount = 0; // Iteration Counter
@@ -148,11 +148,11 @@ int main(void) {
 				Vector args;
 				for (unsigned int i = 0; lcount < aliases.size; i++) {
 					if (i >= aliases.size) i = 0;
-					if (!strcmp(get(&tokens, 0).String, get(&aliases, i).String)) { // Does the command have an alias?
-						strncpy(argBuff, hash_lookUp(&rawcmds, get(&tokens, 0).String).String, sizeof(argBuff));
-						args = vect_split(argBuff, " ");
+					if (!strcmp(vector_get(&tokens, 0).String, vector_get(&aliases, i).String)) { // Does the command have an alias?
+						strncpy(argBuff, hash_lookUp(&rawcmds, vector_get(&tokens, 0).String).String, sizeof(argBuff));
+						args = vector_split(argBuff, " ");
 						for (unsigned int j = args.size-1; j > 0; j--)
-							add(&tokens, 1, get(&args, j));
+							vector_add(&tokens, 1, vector_get(&args, j));
 						release(args.array); /* Deletes the Alias line buffer if the input
 						                        command did not match the current key */
 						break;
@@ -160,13 +160,13 @@ int main(void) {
 					lcount++;
 				}
 				//==================================================================================
-				if (!strcmp(get(&tokens, 0).String, "cd")) changeDir(&tokens);
+				if (!strcmp(vector_get(&tokens, 0).String, "cd")) changeDir(&tokens);
 				else {
 					//------------------------------------------------------------------------------
 					// Sets up argv, then runs the command
 					char* extArgv[tokens.size+1];
 					for (register unsigned int j = 0; j < tokens.size; j++)
-						extArgv[j] = get(&tokens, j).String;
+						extArgv[j] = vector_get(&tokens, j).String;
 					extArgv[tokens.size] = NULL;
 					if (!redirect_pipe(tokens.size+1, extArgv) &&
 						!redirect_in(tokens.size+1, extArgv) &&
