@@ -9,7 +9,6 @@ typedef struct {
 } HashTable;
 
 extern HashTable ht_init(int size);
-extern int hash(char* key, int tableSize);
 extern GenType lookUp(HashTable* tablePtr, char* key);
 extern void map(HashTable* tablePtr, char* key, char* value);
 extern void unmap(HashTable* tablePtr, char* key);
