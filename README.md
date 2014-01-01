@@ -14,21 +14,30 @@
 ***
   
 ## Things I've Learned
-  - More about [C][C] in general:
-    - Using the Preprocessor.
-    	- Using Header files.
-    	- Using Macros
-    - Managing Memory.
-    - File I/O
-    - [Signal][Signal] Handling (Very Basic).
-    - Ways to implement higher level functionality:
-      - Using unions to implement [Generic Types][Generics]
-      - Using structs for pseudo [Object-Oriented Programming][OOP]
+  - How to program in [C][C]:
+    - The Basics:
+      - Primative Data Types.
+      - Declaring and Calling Functions.
+      - Using the [Preprocessor][Preprocessor].
+    	  - Including Header files.
+    	  - Using Macros.
+    - More Advanced features:
+      - Managing Memory.
+        - Introduced to the fundamental concepts of the Stack and Heap.
+        - The types of allocation:
+          - [Automatic][Automatic].
+          - [Static][Static].
+          - [Dynamic][Dynamic].
+      - File I/O.
+      - Using Structs and Unions to build more complex data types.
+      - Optimizing with keywords like `inline` and `register`.
 
-  - The characteristics / common features of a [Command Line Shell][Shell]
+  - The characteristics / common features of a [Command Line Shell][Shell].
     - Command Aliasing
     - [Redirection][Redirection]
   
+  - Making System Calls.
+  - Basic [Signal][Signal] Handling.
   - Creating new processes ([Forking][Fork]).
   - What [ANSI Escape Codes][ANSI Escape Codes] are and how to use some.
   - How to write a [Man page][Man page].
@@ -64,6 +73,10 @@
 [GCC]: http://en.wikipedia.org/wiki/GNU_Compiler_Collection
 [Clang]: http://en.wikipedia.org/wiki/Clang
 [LLVM]: http://en.wikipedia.org/wiki/LLVM
+[Preprocessor]: http://en.wikipedia.org/wiki/C_preprocessor
+[Automatic]: http://en.wikipedia.org/wiki/Automatic_memory_allocation
+[Static]: http://en.wikipedia.org/wiki/Static_memory_allocation
+[Dynamic]: http://en.wikipedia.org/wiki/Dynamic_memory_allocation#Dynamic_memory_allocation
 [Readline]: http://en.wikipedia.org/wiki/GNU_Readline
 [Hash]: https://github.com/tyler-cromwell/Data-Structs/tree/master/hash
 [Vector]: https://github.com/tyler-cromwell/Data-Structs/tree/master/vector
