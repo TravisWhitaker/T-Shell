@@ -149,7 +149,7 @@ int main(void) {
 				for (unsigned int i = 0; lcount < aliases.size; i++) {
 					if (i >= aliases.size) i = 0;
 					if (!strcmp(get(&tokens, 0).String, get(&aliases, i).String)) { // Does the command have an alias?
-						strncpy(argBuff, lookUp(&rawcmds, get(&tokens, 0).String).String, sizeof(argBuff));
+						strncpy(argBuff, hash_lookUp(&rawcmds, get(&tokens, 0).String).String, sizeof(argBuff));
 						args = vect_split(argBuff, " ");
 						for (unsigned int j = args.size-1; j > 0; j--)
 							add(&tokens, 1, get(&args, j));

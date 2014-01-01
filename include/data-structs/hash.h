@@ -8,9 +8,9 @@ typedef struct {
 	GenType* table;
 } HashTable;
 
-extern HashTable ht_init(int size);
-extern GenType lookUp(HashTable* tablePtr, char* key);
-extern void map(HashTable* tablePtr, char* key, char* value);
-extern void unmap(HashTable* tablePtr, char* key);
+extern HashTable hash_init(int size);
+extern GenType hash_lookUp(HashTable* tablePtr, char* key);
+extern void hash_map(HashTable* tablePtr, char* key, char* value);
+extern void hash_unmap(HashTable* tablePtr, char* key);
 
 #endif
