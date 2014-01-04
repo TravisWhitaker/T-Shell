@@ -1,5 +1,6 @@
 // Standard: gnu99
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,11 +17,23 @@ typedef struct redirection_symbol {
 } redir_sym;
 
 /*
+ * Raises an error with the given message, then terminates the program.
+ * Argument(s):
+ *   char* message: The message to be printed whhen the error is raised.
+ */
+static inline void raise_errno(char* message) {
+	perror(message);
+	exit(EXIT_FAILURE);
+}
+
+/*
  * Returns the arguments within a range (start <= N <= end).
  * Argument(s):
  *   char* argv[]: The command line arguments.
  *   int start: Index of the first argument.
  *   int end: Index of the end argument
+ * Note for Memory Management:
+ *   Free the returned array when done.
  * Returns:
  *   An array of command line arguments.
  */
@@ -71,13 +84,14 @@ int redirect_in(int argc, char* argv[]) {
 		int ret;
 		pid_t childPID = fork();
 		FILE* inf = fopen(after[0], "r");
-		if (childPID == 0) { // Child
+		if (childPID == -1) // It broke
+			raise_errno(before[0]);
+		else if (childPID == 0) { // Child
 			dup2(fileno(inf), 0); // Make inf be the read end
-			if (execvp(before[0], before)) {
-				perror(before[0]);
-				exit(EXIT_FAILURE);
-			}
-		} else wait(&ret); // Parent
+			if (execvp(before[0], before))
+				raise_errno(before[0]);
+		} else // Parent
+			wait(&ret);
 		fclose(inf);
 		free(before);
 		free(after);
@@ -103,13 +117,13 @@ int redirect_out(int argc, char* argv[]) {
 		int filedes[2];
 		pipe(filedes);
 		pid_t childPID = fork();
-		if (childPID == 0) { // Child
+		if (childPID == -1) // It broke
+			raise_errno(before[0]);
+		else if (childPID == 0) { // Child
 			close(filedes[0]);
 			dup2(filedes[1], 1); // Make stdout be the write end
-			if (execvp(before[0], before)) {
-				perror(before[0]);
-				exit(EXIT_FAILURE);
-			}
+			if (execvp(before[0], before))
+				raise_errno(before[0]);
 		} else { // Parent
 			close(filedes[1]);
 			wait(&ret);
@@ -145,26 +159,26 @@ int redirect_pipe(int argc, char* argv[]) {
 		int ret;
 		int filedes[2];
 		pipe(filedes);
-		pid_t childPID = fork();
-		if (childPID == 0) { // Child
+		pid_t childPID = fork(); // Run first program
+		if (childPID == -1) // It broke
+			raise_errno(before[0]);
+		else if (childPID == 0) { // Child
 			close(filedes[0]);
 			dup2(filedes[1], 1); // Make stdout be the write end
-			if (execvp(before[0], before)) {
-				perror(before[0]);
-				exit(EXIT_FAILURE);
-			}
+			if (execvp(before[0], before))
+				raise_errno(before[0]);
 		} else { // Parent
 			close(filedes[1]);
 			wait(&ret);
 		}
-		childPID = fork();
+		childPID = fork(); // Run second program
+		if (childPID == -1) // It broke
+			raise_errno(before[0]);
 		if (childPID == 0) { // Child
 			close(filedes[1]);
 			dup2(filedes[0], 0); // Make stdin be the read end
-			if (execvp(after[0], after)) {
-				perror(after[0]);
-				exit(EXIT_FAILURE);
-			}
+			if (execvp(after[0], after))
+				raise_errno(before[0]);
 		}
 		else { // Parent
 			close(filedes[0]);
