@@ -6,7 +6,7 @@ tsh \- T-Shell
 .SH SYNOPSIS
 tsh
 .SH DESCRIPTION
-T-Shell is a simple Command Line Shell for Linux.
+T-Shell is a simple Command Line Shell for Linux with support for command aliasing, and redirection.
 .SH OPTIONS
 T-Shell does not take any options.
 .SH BUGS
