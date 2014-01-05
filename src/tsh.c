@@ -16,11 +16,8 @@
 #include "data-structs/hash.h"
 #include "redirection.h"
 #include "strutil.h"
+#include "tsh.h"
 #include "data-structs/vector.h"
-
-#define STRING_END '\0' // Null terminator, marks end of a string.
-#define BLANK_SPACE 32 // The ASCII value for the Space character.
-#define BUFFER_SIZE BUFSIZ/32 // New buffer size.
 
 /*
  * Frees the memory pointed to by 'ptr'
@@ -141,26 +138,23 @@ int main(void) {
 			else if (!strcmp(input, "clear")) clearScreen(input);
 			else {
 		 		Vector tokens = vector_split(input, " "); // User input tokens
+		 		char* cmd = vector_get(&tokens, 0).String;
 				//==================================================================================
 				// Injecting the real commands into user input before running.
-				unsigned int lcount = 0; // Iteration Counter
-				char argBuff[BUFFER_SIZE];
-				Vector args;
-				for (unsigned int i = 0; lcount < aliases.size; i++) {
-					if (i >= aliases.size) i = 0;
-					if (!strcmp(vector_get(&tokens, 0).String, vector_get(&aliases, i).String)) { // Does the command have an alias?
-						strncpy(argBuff, hash_lookUp(&rawcmds, vector_get(&tokens, 0).String).String, sizeof(argBuff));
-						args = vector_split(argBuff, " ");
+				char line[BUFFER_SIZE];
+				for (unsigned int i = 0; i < aliases.size; i++) {
+					if (!strcmp(cmd, vector_get(&aliases, i).String)) { // Does the command have an alias?
+						strncpy(line, hash_lookUp(&rawcmds, cmd).String, sizeof(line));
+						Vectorargs = vector_split(line, " ");
 						for (unsigned int j = args.size-1; j > 0; j--)
 							vector_add(&tokens, 1, vector_get(&args, j));
 						release(args.array); /* Deletes the Alias line buffer if the input
 						                        command did not match the current key */
 						break;
 					}
-					lcount++;
 				}
 				//==================================================================================
-				if (!strcmp(vector_get(&tokens, 0).String, "cd")) changeDir(&tokens);
+				if (!strcmp(cmd, "cd")) changeDir(&tokens);
 				else {
 					//------------------------------------------------------------------------------
 					// Sets up argv, then runs the command
@@ -183,6 +177,6 @@ int main(void) {
 	return 0;
 }
 
-#undef BUFFER_SIZE
 #undef BLANK_SPACE
+#undef BUFFER_SIZE
 #undef STRING_END

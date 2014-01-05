@@ -6,11 +6,8 @@
 
 #include "data-structs/hash.h"
 #include "strutil.h"
+#include "tsh.h"
 #include "data-structs/vector.h"
-
-#define BLANK_SPACE 32 // The ASCII value for the Space character.
-#define BUFFER_SIZE BUFSIZ/32 // New buffer size.
-#define STRING_END '\0' // Null terminator, marks end of a string.
 
 /*
  * Frees the memory pointed to by 'ptr'
