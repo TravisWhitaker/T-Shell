@@ -10,16 +10,6 @@
 #include "data-structs/vector.h"
 
 /*
- * Frees the memory pointed to by 'ptr'
- * Argument(s):
- *   void* ptr, pointer to ANY allocated memory
- */
-static inline void release(void* ptr) {
-	free(ptr);
-	ptr = NULL;
-}
-
-/*
  * Reads a given file.
  * Argument(s):
  *   char** fileName, the file itself

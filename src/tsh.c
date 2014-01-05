@@ -20,16 +20,6 @@
 #include "data-structs/vector.h"
 
 /*
- * Frees the memory pointed to by 'ptr'
- * Argument(s):
- *   void* ptr, pointer to ANY allocated memory
- */
-static inline void release(void* ptr) {
-	free(ptr);
-	ptr = NULL;
-}
-
-/*
  * Clears the terminal screen and sets the cursor to the top-left corner
  * Although linux has its own clear command, I kept this for the sake of
  * introducing myself to ANSI Escape Codes.
