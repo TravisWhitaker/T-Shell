@@ -89,7 +89,7 @@ static void execute(char** extArgv) {
 }
 
 /*
- * Defines how Control-C (SIGINT) behaves, by not letting it close the shell.
+ * Defines how Control-C (SIGINT) behaves.
  */
 static void ctrlC() {}
 
@@ -128,13 +128,13 @@ int main(void) {
 			else if (!strcmp(input, "clear")) clearScreen(input);
 			else {
 		 		Vector tokens = vector_split(input, " "); // User input tokens
-		 		char* cmd = vector_get(&tokens, 0).String;
+		 		#define COMMAND vector_get(&tokens, 0).String
 				//==================================================================================
 				// Injecting the real commands into user input before running.
 				char line[BUFFER_SIZE];
 				for (unsigned int i = 0; i < aliases.size; i++) {
-					if (!strcmp(cmd, vector_get(&aliases, i).String)) { // Does the command have an alias?
-						strncpy(line, hash_lookUp(&rawcmds, cmd).String, sizeof(line));
+					if (!strcmp(COMMAND, vector_get(&aliases, i).String)) { // Does the command have an alias?
+						strncpy(line, hash_lookUp(&rawcmds, COMMAND).String, sizeof(line));
 						Vector args = vector_split(line, " ");
 						for (unsigned int j = args.size-1; j > 0; j--)
 							vector_add(&tokens, 1, vector_get(&args, j));
@@ -144,7 +144,7 @@ int main(void) {
 					}
 				}
 				//==================================================================================
-				if (!strcmp(cmd, "cd")) changeDir(&tokens);
+				if (!strcmp(COMMAND, "cd")) changeDir(&tokens);
 				else {
 					//------------------------------------------------------------------------------
 					// Sets up argv, then runs the command
@@ -158,6 +158,7 @@ int main(void) {
 					) execute(extArgv); // Executes the external program
 					//------------------------------------------------------------------------------
 				}
+				#undef COMMAND
 				release(tokens.array); // Deletes the input tokens
 				release(input); // Frees user input
 			}
