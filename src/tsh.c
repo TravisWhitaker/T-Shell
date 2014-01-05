@@ -145,7 +145,7 @@ int main(void) {
 				for (unsigned int i = 0; i < aliases.size; i++) {
 					if (!strcmp(cmd, vector_get(&aliases, i).String)) { // Does the command have an alias?
 						strncpy(line, hash_lookUp(&rawcmds, cmd).String, sizeof(line));
-						Vectorargs = vector_split(line, " ");
+						Vector args = vector_split(line, " ");
 						for (unsigned int j = args.size-1; j > 0; j--)
 							vector_add(&tokens, 1, vector_get(&args, j));
 						release(args.array); /* Deletes the Alias line buffer if the input
