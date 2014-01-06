@@ -29,6 +29,7 @@
           - [Static][Static].
           - [Dynamic][Dynamic].
       - File I/O.
+        - Text & Binary.
       - Using Structs and Unions to build more complex data types.
       - Optimizing with keywords like `inline` and `register`.
 
