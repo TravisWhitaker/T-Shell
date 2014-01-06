@@ -110,6 +110,7 @@ int redirect_in(int argc, char* argv[]) {
 int redirect_out(int argc, char* argv[]) {
 	redir_sym osym = {NULL, 0};
 	find_symbol(argc, argv, ">", &osym);
+	if (osym.symbol == NULL) find_symbol(argc, argv, ">>", &osym);
 	if (osym.symbol != NULL) {
 		char** before = args_in_range(argv, 0, osym.index);
 		char** after = args_in_range(argv, osym.index+1, argc);
@@ -128,7 +129,11 @@ int redirect_out(int argc, char* argv[]) {
 			close(filedes[1]);
 			wait(&ret);
 		}
-		FILE* outf = fopen(after[0], "w+");
+		FILE* outf;
+		if (!strcmp(osym.symbol, ">"))
+			outf = fopen(after[0], "w+"); // Overwrite file
+		else if (!strcmp(osym.symbol, ">>"))
+			outf = fopen(after[0], "a+"); // Append to file
 		FILE* inf = fdopen(filedes[0], "r");
 		char buffer[64];
 		while (fgets(buffer, 64, inf) != NULL)
