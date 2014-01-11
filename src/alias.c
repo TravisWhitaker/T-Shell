@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "data-structs/hash.h"
-#include "strutil.h"
+#include "strutil/strutil.h"
 #include "tsh.h"
 #include "data-structs/vector.h"
 
@@ -18,7 +18,7 @@
  *   (Vector is included from the header file, 'data-structs/vector.h')
  * Returns: Array of the lines in the file
  */
-static Vector readAlias(char* fileName) {
+static Vector alias_read(char* fileName) {
 	#define USER getenv("USER") // User account name
 	Vector contents = vector_init(0);
 	unsigned int path_size = 0;
@@ -55,7 +55,7 @@ static Vector readAlias(char* fileName) {
 }
 
 void alias_init(HashTable* rawcmds, Vector* aliases) {
-	Vector lines = readAlias(".tsh-alias");
+	Vector lines = alias_read(".tsh-alias");
 	*aliases = vector_init(lines.size); // Initializes an Array of Aliases
 	*rawcmds = hash_init(lines.size); // Initializes a Hash Table of actual commands
 	for (unsigned int i = 0; i < lines.size; i++) {

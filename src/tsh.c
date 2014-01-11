@@ -15,7 +15,7 @@
 #include "alias.h"
 #include "data-structs/hash.h"
 #include "redirection.h"
-#include "strutil.h"
+#include "strutil/strutil.h"
 #include "tsh.h"
 #include "data-structs/vector.h"
 
@@ -39,7 +39,7 @@ static void clearScreen(char* inputPtr) {
  * Changes the current working directory.
  * Argument(s):
  *   Vector* tokens, a pointer to the tokenized user input
-## *   int size, the size of the array of tokens
+ *   int size, the size of the array of tokens
  */
 static void changeDir(Vector* tokens) {
 	if (tokens->size == 2) {
