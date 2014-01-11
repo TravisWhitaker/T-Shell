@@ -7,12 +7,24 @@
 ***
 
 ## Goal
-  I've been using this project as a kind of road-map to follow while I learn [C][C]. In addition to that, I've been learning more about [Command Line Shells][Shell] and [Linux][Linux].
+  **Short term:** I've been using this project as a kind of road-map to follow while I learn [C][C]. In addition to that, I've been learning more about [Command Line Shells][Shell] and [Linux][Linux] in general.
   
-  I do intend to (in future releases) make this a comprehensive shell, with capabilities similar to that of [Bash][Bash], [Zsh][Zsh], and [Fish][Fish].
-  
+  **Long term:** I intend make this a comprehensive shell, with capabilities similar to that of [Bash][Bash], [Zsh][Zsh], and [Fish][Fish].
+
 ***
-  
+
+# Features
+  - Redirection:
+    - Piping
+    - Output
+      - Overwrite file
+      - Append to file
+    - Input
+  - Command Aliasing
+  - (More information coming soon)
+
+***
+
 ## Things I've Learned
   - How to program in [C][C]:
     - The Basics:
@@ -21,6 +33,7 @@
       - Using the [Preprocessor][Preprocessor].
     	  - Including Header files.
     	  - Using Macros.
+    	  - Conditional Code Inclusion.
     - More Advanced features:
       - Managing Memory.
         - Introduced to the fundamental concepts of the Stack and Heap.
@@ -28,8 +41,7 @@
           - [Automatic][Automatic].
           - [Static][Static].
           - [Dynamic][Dynamic].
-      - File I/O.
-        - Text & Binary.
+      - File I/O (Text & Binary).
       - Using Structs and Unions to build more complex data types.
       - Optimizing with keywords like `inline` and `register`.
 
@@ -44,7 +56,7 @@
   - How to write a [Man page][Man page].
   - How to use [Makefiles][Makefile].
   - How to use [Valgrind][Valgrind].
-  - Introduced me to [Clang][Clang]/[LLVM][LLVM]
+  - Introduced me to [Clang][Clang]/[LLVM][LLVM].
 
 ***
 
