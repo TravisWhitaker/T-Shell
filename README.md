@@ -2,7 +2,7 @@
 
 ## What is T-Shell?
 
-  T-Shell is my first large project in [C][C]. It is a [Linux][Linux] [Command Line Shell][Shell].
+  T-Shell is my first large project written entirely in [C][C] (despite GitHub's language meter). It is a [Linux][Linux] [Command Line Shell][Shell].
 
 ***
 
@@ -15,14 +15,13 @@
 
 # Features
   - Execution of external programs (Commands).
-  - Redirection:
+  - [Redirection][Redirection]:
     - [Piping][Pipeline].
     - Output.
       - Overwrite file.
       - Append to file.
     - Input.
   - Command Aliasing.
-  - (More information coming soon)
 
 ***
 
