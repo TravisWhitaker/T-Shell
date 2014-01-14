@@ -14,13 +14,14 @@
 ***
 
 # Features
+  - Execution of external programs (Commands).
   - Redirection:
-    - Piping
-    - Output
-      - Overwrite file
-      - Append to file
-    - Input
-  - Command Aliasing
+    - [Piping][Pipeline].
+    - Output.
+      - Overwrite file.
+      - Append to file.
+    - Input.
+  - Command Aliasing.
   - (More information coming soon)
 
 ***
@@ -30,6 +31,7 @@
     - The Basics:
       - Primative Data Types.
       - Declaring and Calling Functions.
+        - Making [System Calls][Syscall].
       - Using the [Preprocessor][Preprocessor].
     	  - Including Header files.
     	  - Using Macros.
@@ -49,9 +51,9 @@
     - Command Aliasing.
     - [Redirection][Redirection].
   
-  - Making [System Calls][Syscall].
+  - What [System Calls][Syscall] are.
   - Basic [Signal][Signal] Handling.
-  - Creating new processes ([Forking][Fork]).
+  - Creating and running new processes ([Fork][Fork] & [Exec][Exec]).
   - What [ANSI Escape Codes][ANSI Escape Codes] are and how to use some.
   - How to write a [Man page][Man page].
   - How to use [Makefiles][Makefile].
@@ -79,7 +81,7 @@
     5) `[sudo] make install`<br><br>
   Notes:<br>
   1) The Makefile specifies [Clang][Clang]/[LLVM][LLVM] as the compiler, feel free to change that.<br>
-  2) You should add T-Shell to /etc/shells (insert line: `/usr/bin/tsh`).
+  2) When un-installing, you should remove T-Shell from `/etc/shells`.
   
 [C]: http://en.wikipedia.org/wiki/C_(programming_language)
 [GLIBC]: http://en.wikipedia.org/wiki/GNU_C_Library
@@ -98,7 +100,9 @@
 [Man page]: http://en.wikipedia.org/wiki/Man_page
 [Makefile]: http://en.wikipedia.org/wiki/Make_(software)
 [Valgrind]: http://en.wikipedia.org/wiki/Valgrind
+[Exec]: http://en.wikipedia.org/wiki/Exec_(computing)
 [Fork]: http://en.wikipedia.org/wiki/Fork_(system_call)
+[Pipeline]: http://en.wikipedia.org/wiki/Pipeline_(Unix)
 [ANSI Escape Codes]: http://en.wikipedia.org/wiki/ANSI_escape_code
 [Generics]: http://en.wikipedia.org/wiki/Generic_programming
 [OOP]: http://en.wikipedia.org/wiki/Object-oriented_programming
