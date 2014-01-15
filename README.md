@@ -15,13 +15,14 @@
 
 # Features
   - Execution of external programs (Commands).
+  - History.
+  - Command Aliasing.
   - [Redirection][Redirection]:
     - [Piping][Pipeline].
     - Output.
       - Overwrite file.
       - Append to file.
     - Input.
-  - Command Aliasing.
 
 ***
 
