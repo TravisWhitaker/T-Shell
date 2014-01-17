@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "symtab.h"
 
@@ -10,7 +11,16 @@ typedef struct symtab {
 	Symbol* symbols;
 } SymbolTable;
 
-SymbolTable table;
+SymbolTable table; // The table itself.
+
+Symbol* symtab_find(char* identifier) {
+	Symbol* target = NULL;
+	for (unsigned int i = 0; i < table.size; i++) {
+		if (!strcmp(table.symbols[i].identifier, identifier))
+			*target = table.symbols[i];
+	}
+	return target;
+}
 
 void symtab_empty(void) {
 	table.size = 0;
