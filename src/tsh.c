@@ -43,12 +43,15 @@ static void clearScreen(char* inputPtr) {
  */
 static void changeDir(Vector* tokens) {
 	if (tokens->size == 2) {
-		if (chdir(vector_get(tokens, 1).String) == -1)
-			perror("tsh");
+		if (chdir(vector_get(tokens, 1).String) == -1) {
+			printf(COLOR_RED);
+			perror("T-Shell");
+			printf(COLOR_RESET);
+		}
 	} // Changes to the given directory
 	else if (tokens->size == 1) chdir(getenv("HOME"));
 	// Changes to the user's home directory
-	else printf("tsh: Too many arguments.\n");
+	else printf(COLOR_RED "T-Shell: Too many arguments.\n" COLOR_RESET);
 }
 
 /*
@@ -81,11 +84,15 @@ static void execute(char** extArgv) {
 	if (childPID >= 0) { // Was fork successful?
 		if (childPID == 0) {
 			if (execvp(extArgv[0], extArgv) == -1) { // Run child process
-				printf("tsh: \'%s\' is not a recognized command...\n", extArgv[0]);
+				printf(COLOR_RED "T-Shell: \'%s\' is not a recognized command...\n" COLOR_RESET, extArgv[0]);
 				exit(EXIT_FAILURE);
 			}
 		} else wait(&childExitStatus); // Parent (this) process waits for child to finish
-	} else perror("tsh"); // No it was not
+	} else {
+		printf(COLOR_RED);
+		perror("T-Shell");
+		printf(COLOR_RESET);
+	}
 }
 
 /*
@@ -168,6 +175,8 @@ int main(void) {
 	return 0;
 }
 
+#undef COLOR_RED
+#undef COLOR_RESET
 #undef BLANK_SPACE
 #undef BUFFER_SIZE
 #undef STRING_END
