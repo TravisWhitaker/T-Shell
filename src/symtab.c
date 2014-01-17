@@ -5,7 +5,7 @@
 
 #include "symtab.h"
 
-typedef symtab {
+typedef struct symtab {
 	int size;
 	Symbol* symbols;
 } SymbolTable;
@@ -19,6 +19,6 @@ void symtab_empty(void) {
 }
 
 void symtab_dump(void) {
-	for (unsigned int i = 0; i < SymbolTable.size; i++);
+	for (unsigned int i = 0; i < table.size; i++)
 		printf("%s\n", table.symbols[i].identifier);
 }
