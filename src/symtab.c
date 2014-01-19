@@ -53,9 +53,19 @@ void symtab_delete(char* uid) {
  * Prints information about the Symbol Table.
  */
 void symtab_dump(void) {
-	printf("Size: %d\n", table.size);
-	for (unsigned int i = 0; i < table.size; i++)
-		printf("[%d]: %s\n", i, table.symbols[i].uid);
+	printf("Table Size: %d\n", table.size);
+	for (unsigned int i = 0; i < table.size; i++) {
+		Symbol temp = table.symbols[i];
+		printf("[%d]: %s\n", i, temp.uid);
+		printf("  -> %s\n", temp.scope);
+		if (temp.type == NUMBER) {
+			printf("  -> NUMBER\n");
+			printf("  -> %d\n", temp.value.Integer);
+		} else if (temp.type == STRING) {
+			printf("  -> STRING\n");
+			printf("  -> %s\n", temp.value.String);
+		}
+	}
 }
 
 /*
@@ -83,12 +93,12 @@ Symbol* symtab_find(char* uid) {
 	return target;
 }
 
-#ifdef SYM_DEBUG
+#ifdef SYMTAB_DEBUG
 // For testing
 int main(void) {
 	printf("Size: %d\n", table.size);
-	symtab_add("Test", "local", NUMBER, (GenType) 2.7);
-	symtab_add("Poop", "local", NUMBER, (GenType) 2.7);
+	symtab_add("Test", "local", NUMBER, (GenType) 2);
+	symtab_add("Poop", "local", STRING, (GenType) "Herro");
 	Symbol s = *symtab_find("Test");
 	printf("Size: %d\n", table.size);
 	printf("UID: %s\n", s.uid);
