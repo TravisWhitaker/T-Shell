@@ -98,12 +98,12 @@ Symbol* symtab_find(char* uid) {
 int main(void) {
 	printf("Size: %d\n", table.size);
 	symtab_add("Test", "local", NUMBER, (GenType) 2);
-	symtab_add("Poop", "local", STRING, (GenType) "Herro");
-	Symbol s = *symtab_find("Test");
+	symtab_add("Test2", "local", STRING, (GenType) "Hello");
+	Symbol s = *symtab_find("Test2");
 	printf("Size: %d\n", table.size);
 	printf("UID: %s\n", s.uid);
 	symtab_dump();
-	symtab_delete("Poop");
+	symtab_delete("Test2");
 	symtab_dump();
 	symtab_empty();
 	return 0;
