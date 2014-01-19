@@ -6,15 +6,16 @@
 #include "data-structs/gentype.h"
 
 typedef enum type {
-	NUMBER, // Number data type (1, 3.14, -2, etc).
-	STRING  // String data type ("Hello", 'C', etc).
+	NUMBER,   // Number data type (1, 3.14, -2, etc).
+	STRING,   // String data type ("Hello", 'C', etc).
+	FUNCTION, // Function type (foo(), bar(args), etc).
 } Type;
 
 typedef struct sym {
 	char* uid;     // The Unique Identifier (Name) of the Symbol.
-	char* scope;   // The Scope the Symbol is in. Keep as char* ?
+	char* scope;   // The Scope the Symbol is in. (Many need to change Data Type)
 	Type type;     // The Type of Symbol.
-	GenType value; // The Value contained in the Symbol.
+	GenType value; // The Value contained in the Symbol. (Many need to change Data Type)
 } Symbol;
 
 extern void symtab_add(char* uid, char* scope, Type type, GenType value);
