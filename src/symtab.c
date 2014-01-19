@@ -1,4 +1,4 @@
-/* Standard: gnu99 */
+// Standard: gnu99
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,28 +7,95 @@
 #include "symtab.h"
 
 typedef struct symtab {
-	int size;
-	Symbol* symbols;
+	unsigned int size; // The number of Symbols in the table.
+	Symbol* symbols;   // The array of Symbols.
 } SymbolTable;
 
 SymbolTable table; // The table itself.
 
-Symbol* symtab_find(char* identifier) {
-	Symbol* target = NULL;
-	for (unsigned int i = 0; i < table.size; i++) {
-		if (!strcmp(table.symbols[i].identifier, identifier))
-			*target = table.symbols[i];
-	}
-	return target;
+/*
+ * Constructs a Symbol then adds it to the table.
+ * Argument(s):
+ *   char* uid: The Unique Identifier (Name) of the Symbol.
+ *   char* scope: The Scope the Symbol is in.
+ *   Type type: The Type of Symbol.
+ *   GenType value: The Value contained in the Symbol.
+ * Note for Memory Management:
+ *   Call 'symtab_empty()' when done.
+ */
+void symtab_add(char* uid, char* scope, Type type, GenType value) {
+	Symbol sym = {uid, scope, type, value};
+	table.size++;
+	table.symbols = realloc(table.symbols, table.size * sizeof(Symbol));
+	table.symbols[table.size - 1] = sym;
 }
 
+/*
+ * Constructs a Symbol then adds it to the table.
+ * Argument(s):
+ *   char* uid: The Unique Identifier (Name) of the Symbol.
+ * Note for Memory Management:
+ *   Call 'symtab_empty()' when done.
+ */
+void symtab_delete(char* uid) {
+	table.size--;
+	Symbol* newTable = calloc(table.size, sizeof(Symbol));
+	unsigned int i = 0, o = 0;
+	for (; i < table.size; i++) {
+		if (!strncmp(table.symbols[i].uid, uid, strlen(table.symbols[i].uid))) o++;
+		newTable[i] = table.symbols[i+o];
+	}
+	free(table.symbols);
+	table.symbols = newTable;
+}
+
+/*
+ * Prints information about the Symbol Table.
+ */
+void symtab_dump(void) {
+	printf("Size: %d\n", table.size);
+	for (unsigned int i = 0; i < table.size; i++)
+		printf("[%d]: %s\n", i, table.symbols[i].uid);
+}
+
+/*
+ * Sets the table size to Zero and frees the array of Symbols.
+ */
 void symtab_empty(void) {
 	table.size = 0;
 	free(table.symbols);
 	table.symbols = NULL;
 }
 
-void symtab_dump(void) {
-	for (unsigned int i = 0; i < table.size; i++)
-		printf("%s\n", table.symbols[i].identifier);
+/*
+ * Finds the Symbol with the given UID.
+ * Argument(s):
+ *   char* uid: The Unique Identifier (Name) of the Symbol.
+ * Returns:
+ *   A pointer the Symbol.
+ */
+Symbol* symtab_find(char* uid) {
+	Symbol* target = NULL;
+	for (unsigned int i = 0; i < table.size; i++) {
+		if (!strncmp(table.symbols[i].uid, uid, strlen(table.symbols[i].uid)))
+			target = &table.symbols[i];
+	}
+	return target;
 }
+
+#ifdef SYM_DEBUG
+// For testing
+int main(void) {
+	printf("Size: %d\n", table.size);
+	symtab_add("Test", "local", NUMBER, (GenType) 2.7);
+	symtab_add("Poop", "local", NUMBER, (GenType) 2.7);
+	Symbol s = *symtab_find("Test");
+	printf("Size: %d\n", table.size);
+	printf("UID: %s\n", s.uid);
+	symtab_dump();
+	symtab_delete("Poop");
+	symtab_dump();
+	symtab_empty();
+	return 0;
+}
+#endif
