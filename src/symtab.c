@@ -18,12 +18,12 @@ SymbolTable table; // The table itself.
  * Argument(s):
  *   char* uid: The Unique Identifier (Name) of the Symbol.
  *   char* scope: The Scope the Symbol is in.
- *   Type type: The Type of Symbol.
+ *   SymType type: The SymType of Symbol.
  *   GenType value: The Value contained in the Symbol.
  * Note for Memory Management:
  *   Call 'symtab_empty()' when done.
  */
-void symtab_add(char* uid, char* scope, Type type, GenType value) {
+void symtab_add(char* uid, char* scope, SymType type, GenType value) {
 	Symbol sym = {uid, scope, type, value};
 	table.size++;
 	table.symbols = realloc(table.symbols, table.size * sizeof(Symbol));
