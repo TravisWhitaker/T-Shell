@@ -45,9 +45,12 @@ typedef struct token {
 
 /*
 RESERVED // Language keyword.
-         //    import
+         //    import?
          //    routine
          //    return
          //    if
          //    else
+         //    for
+         //    while
+         //    break
 */
