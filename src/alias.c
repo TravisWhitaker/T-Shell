@@ -19,24 +19,9 @@
  * Returns: Array of the lines in the file
  */
 static Vector alias_read(char* fileName) {
-	#define USER getenv("USER") // User account name
 	Vector contents = vector_init(0);
-	unsigned int path_size = 0;
-	char* filePath;
-	if (!strcmp(USER, "root"))  {
-		path_size = strlen("/")+strlen(USER)+1+11;
-		filePath = realloc(NULL, path_size * sizeof(char));
-		strncpy(filePath, "/", path_size);
-	} else {
-		path_size = strlen("/home/")+strlen(USER)+1+11;
-		filePath = realloc(NULL, path_size * sizeof(char));
-		strncpy(filePath, "/home/", path_size);
-	}
-	strncat(filePath, USER, path_size-strlen(USER)-1);
-	strncat(filePath, "/", path_size-strlen("/")-1);
-	strncat(filePath, fileName, path_size-strlen(filePath)-1);
-	#undef USER
-	FILE* file = fopen(filePath, "a+");
+	char* filePath = construct_path(fileName);
+	FILE* file = fopen(filePath, "a");
 	if (file != NULL) {
 		char line[BUFFER_SIZE];
 		unsigned int i = 0;
@@ -54,6 +39,9 @@ static Vector alias_read(char* fileName) {
 	return contents;
 }
 
+/*
+ *
+ */
 void alias_init(HashTable* rawcmds, Vector* aliases) {
 	Vector lines = alias_read(".tsh-alias");
 	*aliases = vector_init(lines.size); // Initializes an Array of Aliases
@@ -70,6 +58,9 @@ void alias_init(HashTable* rawcmds, Vector* aliases) {
 	release(lines.array); // Delete the Array of Line buffers
 }
 
+/*
+ *
+ */
 void alias_free(HashTable* rawcmds, Vector* aliases) {
 	for (unsigned int i = 0; i < aliases->size; i++) {
 		hash_unmap(rawcmds, vector_get(aliases, i).String); // Deletes a Bucket

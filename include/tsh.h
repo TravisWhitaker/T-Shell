@@ -7,6 +7,8 @@
 #define BUFFER_SIZE BUFSIZ/32 // New buffer size.
 #define STRING_END '\0' // Null terminator, marks end of a string.
 
+extern char* construct_path(char* filename);
+
 /*
  * Frees the memory pointed to by 'ptr'
  * Argument(s):

@@ -95,7 +95,7 @@ static void execute(char** extArgv) {
 	}
 }
 
-static char* history_path(char* filename) {
+char* construct_path(char* filename) {
 	#define USER getenv("USER") // User account name
 	unsigned int path_size = 0;
 	char* filePath;
@@ -129,8 +129,8 @@ int main(void) {
 	HashTable rawcmds;
 	Vector aliases;
 	alias_init(&rawcmds, &aliases);
-	char* historyf = history_path(".tsh-history");
-	FILE* history = fopen(historyf, "a");
+	char* history_path = construct_path(".tsh-history");
+	FILE* history = fopen(history_path, "a");
 	while (true) {
 		//==========================================================================================
 		// Print Prompt and Current (Relative) Directory
@@ -150,7 +150,7 @@ int main(void) {
 			printf("\n");
 			break;
 		} else if (input[0] != STRING_END) {
-			append_history(1, historyf);
+			append_history(1, history_path);
 			if (!strcmp(input, "exit") || !strcmp(input, "quit") || !strcmp(input, "logout")) {
 				release(input); // Frees user input
 				break;
@@ -194,7 +194,7 @@ int main(void) {
 			}
 		} else release(input); // Frees user input
 	}
-	free(historyf);
+	free(history_path);
 	fclose(history);
 	alias_free(&rawcmds, &aliases); // Alias Freeing
 	return 0;
