@@ -95,16 +95,19 @@ static void execute(char** extArgv) {
 	}
 }
 
-char* construct_path(char* filename) {
+/*
+ *
+ */
+char* construct_path(char* filename, size_t length) {
 	#define USER getenv("USER") // User account name
 	unsigned int path_size = 0;
 	char* filePath;
 	if (!strcmp(USER, "root")) {
-		path_size = strlen("/")+strlen(USER)+1+13;
+		path_size = strlen("/")+strlen(USER)+1+length+1;
 		filePath = realloc(NULL, path_size * sizeof(char));
 		strncpy(filePath, "/", path_size);
 	} else {
-		path_size = strlen("/home/")+strlen(USER)+1+13;
+		path_size = strlen("/home/")+strlen(USER)+1+length+1;
 		filePath = realloc(NULL, path_size * sizeof(char));
 		strncpy(filePath, "/home/", path_size);
 	}
@@ -129,7 +132,7 @@ int main(void) {
 	HashTable rawcmds;
 	Vector aliases;
 	alias_init(&rawcmds, &aliases);
-	char* history_path = construct_path(".tsh-history");
+	char* history_path = construct_path(".tsh-history", 12);
 	FILE* history = fopen(history_path, "a");
 	while (true) {
 		//==========================================================================================

@@ -12,16 +12,17 @@
 /*
  * Reads a given file.
  * Argument(s):
- *   char** fileName, the file itself
+ *   char** fileName: The file itself
+ *   size_t length: The length of the filename
  * Memory Management:
  *   Free the elements in the struct member 'array', and the array itself
  *   (Vector is included from the header file, 'data-structs/vector.h')
  * Returns: Array of the lines in the file
  */
-static Vector alias_read(char* fileName) {
+static Vector alias_read(char* fileName, size_t length) {
 	Vector contents = vector_init(0);
-	char* filePath = construct_path(fileName);
-	FILE* file = fopen(filePath, "a");
+	char* filePath = construct_path(fileName, 12);
+	FILE* file = fopen(filePath, "a+");
 	if (file != NULL) {
 		char line[BUFFER_SIZE];
 		unsigned int i = 0;
@@ -39,11 +40,8 @@ static Vector alias_read(char* fileName) {
 	return contents;
 }
 
-/*
- *
- */
 void alias_init(HashTable* rawcmds, Vector* aliases) {
-	Vector lines = alias_read(".tsh-alias");
+	Vector lines = alias_read(".tsh-alias", 10);
 	*aliases = vector_init(lines.size); // Initializes an Array of Aliases
 	*rawcmds = hash_init(lines.size); // Initializes a Hash Table of actual commands
 	for (unsigned int i = 0; i < lines.size; i++) {
@@ -58,9 +56,6 @@ void alias_init(HashTable* rawcmds, Vector* aliases) {
 	release(lines.array); // Delete the Array of Line buffers
 }
 
-/*
- *
- */
 void alias_free(HashTable* rawcmds, Vector* aliases) {
 	for (unsigned int i = 0; i < aliases->size; i++) {
 		hash_unmap(rawcmds, vector_get(aliases, i).String); // Deletes a Bucket
