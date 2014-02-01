@@ -31,7 +31,7 @@ static void clearScreen(char* inputPtr) {
 	                                   resets Cursor position */
 	rewind(stdout); /* Sets the stream position indicator
 	                   to the beginning of the file */
-	ftruncate(1, 0); // Truncates the STDOUT (1) to 0 bytes
+	ftruncate(1, 0); // Truncates STDOUT (1) to 0 bytes
 	free(inputPtr); // Frees user input
 }
 
@@ -95,6 +95,26 @@ static void execute(char** extArgv) {
 	}
 }
 
+static char* history_path(char* filename) {
+	#define USER getenv("USER") // User account name
+	unsigned int path_size = 0;
+	char* filePath;
+	if (!strcmp(USER, "root")) {
+		path_size = strlen("/")+strlen(USER)+1+13;
+		filePath = realloc(NULL, path_size * sizeof(char));
+		strncpy(filePath, "/", path_size);
+	} else {
+		path_size = strlen("/home/")+strlen(USER)+1+13;
+		filePath = realloc(NULL, path_size * sizeof(char));
+		strncpy(filePath, "/home/", path_size);
+	}
+	strncat(filePath, USER, path_size-strlen(USER)-1);
+	strncat(filePath, "/", path_size-strlen("/")-1);
+	strncat(filePath, filename, path_size-strlen(filePath)-1);
+	#undef USER
+	return filePath;
+}
+
 /*
  * Defines how Control-C (SIGINT) behaves.
  */
@@ -109,6 +129,8 @@ int main(void) {
 	HashTable rawcmds;
 	Vector aliases;
 	alias_init(&rawcmds, &aliases);
+	char* historyf = history_path(".tsh-history");
+	FILE* history = fopen(historyf, "a");
 	while (true) {
 		//==========================================================================================
 		// Print Prompt and Current (Relative) Directory
@@ -128,6 +150,7 @@ int main(void) {
 			printf("\n");
 			break;
 		} else if (input[0] != STRING_END) {
+			append_history(1, historyf);
 			if (!strcmp(input, "exit") || !strcmp(input, "quit") || !strcmp(input, "logout")) {
 				release(input); // Frees user input
 				break;
@@ -171,6 +194,8 @@ int main(void) {
 			}
 		} else release(input); // Frees user input
 	}
+	free(historyf);
+	fclose(history);
 	alias_free(&rawcmds, &aliases); // Alias Freeing
 	return 0;
 }
