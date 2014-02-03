@@ -7,6 +7,7 @@ typedef union gentype {
 	int Integer;
 	long Long;
 	double Double;
+	long double LongDouble;
 	char* String;
 	void* Void;
 } GenType;
