@@ -1,6 +1,6 @@
 CC=clang
 CFLAGS=-std=gnu99 -Wall -g -ggdb -lreadline
-SOURCE= $(wildcard ./src/*.c ./lib/*)
+SOURCE= $(wildcard ./src/* ./lib/data-structs/* ./lib/strutil/*)
 INCLUDE=-I ./include
 OUT=-o
 EXECUTABLE=tsh
