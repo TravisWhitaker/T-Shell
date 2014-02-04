@@ -13,6 +13,7 @@
 #include <readline/readline.h>
 
 #include "alias.h"
+#include "configuration.h"
 #include "data-structs/hash.h"
 #include "redirection.h"
 #include "strutil/strutil.h"
@@ -96,25 +97,20 @@ static void execute(char** extArgv) {
 }
 
 /*
- *
+ * Constructs the absolute path for T-Shell's files (i.e. Alias, RC, and History).
+ * Arguments:
+ *   char* filename: The name of the file
+ *   size_t length: The length of the filename.
+ * Note for Memory Management:
+ *   Free the returned path when done.
+ * Returns:
+ *   The absolute path of the file.
  */
 char* construct_path(char* filename, size_t length) {
-	#define USER getenv("USER") // User account name
-	unsigned int path_size = 0;
-	char* filePath;
-	if (!strcmp(USER, "root")) {
-		path_size = strlen("/")+strlen(USER)+1+length+1;
-		filePath = realloc(NULL, path_size * sizeof(char));
-		strncpy(filePath, "/", path_size);
-	} else {
-		path_size = strlen("/home/")+strlen(USER)+1+length+1;
-		filePath = realloc(NULL, path_size * sizeof(char));
-		strncpy(filePath, "/home/", path_size);
-	}
-	strncat(filePath, USER, path_size-strlen(USER)-1);
-	strncat(filePath, "/", path_size-strlen("/")-1);
-	strncat(filePath, filename, path_size-strlen(filePath)-1);
-	#undef USER
+	char* filePath = calloc(BUFFER_SIZE, sizeof(char));
+	strcpy(filePath, getenv("HOME"));
+	strcat(filePath, "/");
+	strcat(filePath, filename);
 	return filePath;
 }
 
@@ -129,16 +125,30 @@ static void ctrlC() {}
 int main(void) {
 	signal(SIGINT, ctrlC); /* Sets the behavior for a Control Character,
 	                          specifically Ctrl-C (SIGINT) */
+	Configuration config = config_read(".tsh-rc", 7);
 	HashTable rawcmds;
 	Vector aliases;
 	alias_init(&rawcmds, &aliases);
 	char* history_path = construct_path(".tsh-history", 12);
-	FILE* history = fopen(history_path, "a");
 	while (true) {
 		//==========================================================================================
-		// Print Prompt and Current (Relative) Directory
+		// Print Prompt and Current Directory
 		char* relativeDir = currentDir();
 		char prompt[BUFFER_SIZE] = "T-Shell: ";
+		int amount = 0;
+		char** pieces = split_string(config.prompt, "%", &amount);
+		for (size_t i = 0; i < amount; i++) {
+			//printf("%s\n", pieces[i]);
+			char first = pieces[i][0];
+			if (first == 'D') {
+				// Directory
+			} else if (first == 'U') {
+				// Username
+			} else if (first == 'H') {
+				// Hostname
+			}
+		}
+		free(pieces);
 		/* Block 1
 		Here */if (strlen(relativeDir) > 0) {
 			for (unsigned int i = 0; i < strlen(relativeDir); i++)
@@ -198,7 +208,6 @@ int main(void) {
 		} else release(input); // Frees user input
 	}
 	free(history_path);
-	fclose(history);
 	alias_free(&rawcmds, &aliases); // Alias Freeing
 	return 0;
 }
