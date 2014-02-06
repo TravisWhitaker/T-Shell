@@ -27,15 +27,20 @@
  *   int size, the size of the array of tokens
  */
 static void changeDir(Vector* tokens) {
-	if (tokens->size == 2) {
+	if (tokens->size == 2) { // Changes to the given directory
 		if (chdir(vector_get(tokens, 1).String) == -1) {
 			printf(COLOR_RED);
 			perror("T-Shell");
 			printf(COLOR_RESET);
 		}
-	} // Changes to the given directory
-	else if (tokens->size == 1) chdir(getenv("HOME"));
-	// Changes to the user's home directory
+	} // Changes to the user's home directory
+	else if (tokens->size == 1) {
+		if (chdir(getenv("HOME"))) {
+			printf(COLOR_RED);
+			perror("T-Shell");
+			printf(COLOR_RESET);
+		}
+	}
 	else printf(COLOR_RED "T-Shell: Too many arguments.\n" COLOR_RESET);
 }
 
@@ -83,7 +88,7 @@ char* construct_path(char* filename, size_t length) {
 /*
  * Defines how Control-C (SIGINT) behaves.
  */
-static void ctrlC() {}
+static void ctrlC() {/* Intentionally Blank */}
 
 /*
  * The Shells main function.
