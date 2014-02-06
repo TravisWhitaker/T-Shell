@@ -21,22 +21,6 @@
 #include "data-structs/vector.h"
 
 /*
- * Clears the terminal screen and sets the cursor to the top-left corner
- * Although linux has its own clear command, I kept this for the sake of
- * introducing myself to ANSI Escape Codes.
- * Argument(s):
- *   char* inputPtr, a pointer to user input.
- */
-static void clearScreen(char* inputPtr) {
-	printf("%c[2J%c[1;1H", 27, 27); /* Clears the Screen and
-	                                   resets Cursor position */
-	rewind(stdout); /* Sets the stream position indicator
-	                   to the beginning of the file */
-	ftruncate(1, 0); // Truncates STDOUT (1) to 0 bytes
-	free(inputPtr); // Frees user input
-}
-
-/*
  * Changes the current working directory.
  * Argument(s):
  *   Vector* tokens, a pointer to the tokenized user input
@@ -155,9 +139,7 @@ int main(void) {
 			if (!strcmp(input, "exit") || !strcmp(input, "quit") || !strcmp(input, "logout")) {
 				release(input); // Frees user input
 				break;
-			}
-			else if (!strcmp(input, "clear")) clearScreen(input);
-			else {
+			} else {
 		 		Vector tokens = vector_split(input, " "); // User input tokens
 		 		#define COMMAND vector_get(&tokens, 0).String
 				//==================================================================================
