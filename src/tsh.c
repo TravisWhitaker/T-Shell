@@ -104,15 +104,14 @@ int main(void) {
 	while (true) {
 		//==================================================================================
 		// Building the Prompt
-		char promptb[strlen(config.prompt)+1];
+		char promptb[strlen(config.prompt)];
 		strcpy(promptb, config.prompt);
-		strcat(promptb, "\0");
 		char* prompt = calloc(BUFFER_SIZE, sizeof(char));
 		int amount = 0;
 		char** pieces = split_string(promptb, "%", &amount);
 		for (size_t i = 0; i < amount; i++) {
 			if (contains(pieces[i], "\\n")) { // Newline
-				replaceAll(pieces[i], '\\', 127);
+				replaceAll(pieces[i], '\\', 8);
 				replaceAll(pieces[i], 'n', 10);
 			}
 			char first = pieces[i][0];
