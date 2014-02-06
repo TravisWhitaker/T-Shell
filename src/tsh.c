@@ -56,19 +56,6 @@ static void changeDir(Vector* tokens) {
 }
 
 /*
- * Gets the current (relative) directory
- * Returns: A pointer to name of the current directory
- */
-static char* currentDir(void) {
-	char* dir = getenv("PWD"); // Saves the Current Absolute Path
-	int amount = 0;
-	int* indexes = indexesOf(dir, '/', &amount);
-	char* current = substring(dir, indexes[amount-1]+1, strlen(dir)); // The Current Directory
-	free(indexes);
-	return current;
-}
-
-/*
  * Runs an external program.
  * Argument(s):
  *   char** extArgv, potential arguments for the program
