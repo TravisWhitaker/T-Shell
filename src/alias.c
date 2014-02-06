@@ -21,7 +21,7 @@
  */
 static Vector alias_read(char* fileName, size_t length) {
 	Vector contents = vector_init(0);
-	char* filePath = construct_path(fileName, 12);
+	char* filePath = construct_path(fileName, length);
 	FILE* file = fopen(filePath, "a+");
 	if (file != NULL) {
 		char line[BUFFER_SIZE];
@@ -30,7 +30,7 @@ static Vector alias_read(char* fileName, size_t length) {
 			if (strchr(line, '#') == NULL && strlen(line) != 1) { // Ignores comments and empty lines
 				char* modLine = calloc(strlen(line), sizeof(char)); // Line buffer
 				memcpy(modLine, line, strlen(line)-1);
-				modLine[strlen(line)-1] = STRING_END;
+				modLine[strlen(line)-1] = ASCII_NULL;
 				vector_add(&contents, i, (GenType) modLine); // Add line to list of contents
 				i++;
 			}
@@ -46,7 +46,7 @@ void alias_init(HashTable* rawcmds, Vector* aliases) {
 	*rawcmds = hash_init(lines.size); // Initializes a Hash Table of actual commands
 	for (unsigned int i = 0; i < lines.size; i++) {
 		char* line = vector_get(&lines, i).String; // A line in the file
-		char* alias = substring(line, 0, indexOf(line, BLANK_SPACE)); // The command alias (KEY)
+		char* alias = substring(line, 0, indexOf(line, ASCII_SPACE)); // The command alias (KEY)
 		char* rawcmd = substring(line, indexOf(line, '\'')+1, strlen(line)-1); // The real command being run (VALUE)
 		vector_set(aliases, i, (GenType) alias);
 		hash_map(rawcmds, alias, rawcmd);

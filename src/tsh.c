@@ -138,7 +138,7 @@ int main(void) {
 		if (input == NULL) { // Exits when Ctrl-D is pressed
 			printf("\n");
 			break;
-		} else if (input[0] != STRING_END) {
+		} else if (input[0] != ASCII_NULL) {
 			append_history(1, history_path);
 			if (!strcmp(input, "exit") || !strcmp(input, "quit") || !strcmp(input, "logout")) {
 				release(input); // Frees user input
