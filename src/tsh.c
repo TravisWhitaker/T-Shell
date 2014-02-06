@@ -57,20 +57,15 @@ static void changeDir(Vector* tokens) {
 
 /*
  * Gets the current (relative) directory
- * Note for Memory Management:
- *   Free the returned pointer when done.
  * Returns: A pointer to name of the current directory
  */
 static char* currentDir(void) {
-	char absoluteBuffer[BUFFER_SIZE] = ""; // Absolute path buffer
-	getcwd(absoluteBuffer, BUFFER_SIZE);
-	char* relativePath = strrchr(absoluteBuffer, '/'); // Relative path buffer
-	char* relativeBuffer = calloc(strlen(relativePath), sizeof(char));
-	unsigned int i = 0;
-	for (; i < (strlen(relativePath)-1); i++)
-		relativeBuffer[i] = relativePath[i+1];
-	relativeBuffer[i] = STRING_END;
-	return relativeBuffer;
+	char* dir = getenv("PWD"); // Saves the Current Absolute Path
+	int amount = 0;
+	int* indexes = indexesOf(dir, '/', &amount);
+	char* current = substring(dir, indexes[amount-1]+1, strlen(dir)); // The Current Directory
+	free(indexes);
+	return current;
 }
 
 /*
@@ -131,33 +126,39 @@ int main(void) {
 	alias_init(&rawcmds, &aliases);
 	char* history_path = construct_path(".tsh-history", 12);
 	while (true) {
-		//==========================================================================================
-		// Print Prompt and Current Directory
-		char* relativeDir = currentDir();
-		char prompt[BUFFER_SIZE] = "T-Shell: ";
+		//==================================================================================
+		// Building the Prompt
+		char promptb[strlen(config.prompt)+1];
+		strcpy(promptb, config.prompt);
+		strcat(promptb, "\0");
+		char* prompt = calloc(BUFFER_SIZE, sizeof(char));
 		int amount = 0;
-		char** pieces = split_string(config.prompt, "%", &amount);
+		char** pieces = split_string(promptb, "%", &amount);
 		for (size_t i = 0; i < amount; i++) {
-			//printf("%s\n", pieces[i]);
-			char first = pieces[i][0];
-			if (first == 'D') {
-				// Directory
-			} else if (first == 'U') {
-				// Username
-			} else if (first == 'H') {
-				// Hostname
+			if (contains(pieces[i], "\\n")) { // Newline
+				replaceAll(pieces[i], '\\', 127);
+				replaceAll(pieces[i], 'n', 10);
 			}
+			char first = pieces[i][0];
+			if (first == 'D') { // Directory
+				char* dir = getcwd(NULL, 0);
+				strcat(prompt, dir);
+				strcat(prompt, pieces[i]+1);
+				free(dir);
+			} else if (first == 'U') { // Username
+				strcat(prompt, getenv("USER"));
+				strcat(prompt, pieces[i]+1);
+			} else if (first == 'H') { // Hostname
+				strcat(prompt, getenv("HOSTNAME"));
+				strcat(prompt, pieces[i]+1);
+			} else
+				strcat(prompt, pieces[i]);
 		}
+		strcat(prompt, " \0");
 		free(pieces);
-		/* Block 1
-		Here */if (strlen(relativeDir) > 0) {
-			for (unsigned int i = 0; i < strlen(relativeDir); i++)
-				prompt[9+i] = relativeDir[i];
-		} else prompt[9] = '/';
-		strncat(prompt, ")> \0", sizeof(prompt)-strlen(prompt)-1);
-		release(relativeDir); // Frees directory name buffer
-		//==========================================================================================
+		//==================================================================================
 		char* input = readline(prompt);
+		free(prompt);
 		add_history(input);
 		if (input == NULL) { // Exits when Ctrl-D is pressed
 			printf("\n");
