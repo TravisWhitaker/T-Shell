@@ -13,7 +13,6 @@ Configuration config_read(char* filename, size_t length) {
 	FILE* rc = fopen(path, "a+");
 	if (rc != NULL) {
 		char line[BUFFER_SIZE];
-		size_t i = 0;
 		while (fgets(line, BUFFER_SIZE, rc) != NULL) {
 			if (strchr(line, '#') == NULL && strlen(line) > 1) {
 				if (contains(line, "PROMPT=")) {
@@ -22,7 +21,6 @@ Configuration config_read(char* filename, size_t length) {
 					strcat(config.prompt, "\0");
 					free(prompt);
 				}
-				i++;
 			}
 		}
 		fclose(rc);
