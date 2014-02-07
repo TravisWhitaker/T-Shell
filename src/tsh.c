@@ -95,7 +95,7 @@ static void ctrlC() {/* Intentionally Blank */}
 int main(void) {
 	signal(SIGINT, ctrlC); /* Sets the behavior for a Control Character,
 	                          specifically Ctrl-C (SIGINT) */
-	Configuration config = config_read(".tsh-rc", 7);
+	Configuration config = config_read();
 	HashTable rawcmds;
 	Vector aliases;
 	alias_init(&rawcmds, &aliases);
@@ -137,16 +137,16 @@ int main(void) {
 		strcat(prompt, " \0");
 		free(pieces);
 		//==================================================================================
-		char* input = readline(prompt);
-		free(prompt);
-		add_history(input);
+		char* input = readline(prompt); // Get User input
+		free(prompt); // Free prompt string
+		add_history(input); // Add input to History list
 		if (input == NULL) { // Exits when Ctrl-D is pressed
 			printf("\n");
 			break;
 		} else if (input[0] != ASCII_NULL) {
-			append_history(1, history_path);
+			append_history(1, history_path); // Write input to History file
 			if (!strcmp(input, "exit") || !strcmp(input, "quit") || !strcmp(input, "logout")) {
-				release(input); // Frees user input
+				release(input); // Frees user input string
 				break;
 			} else {
 		 		Vector tokens = vector_split(input, " "); // User input tokens
@@ -186,7 +186,7 @@ int main(void) {
 			}
 		} else release(input); // Frees user input
 	}
-	free(history_path);
+	free(history_path); // Free History file path
 	alias_free(&rawcmds, &aliases); // Alias Freeing
 	return 0;
 }

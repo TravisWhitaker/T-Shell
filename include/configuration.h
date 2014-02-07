@@ -8,6 +8,6 @@ typedef struct config {
 	char prompt[32];	// Prompt format
 } Configuration;
 
-extern Configuration config_read(char* filename, size_t length);
+extern Configuration config_read(void);
 
 #endif

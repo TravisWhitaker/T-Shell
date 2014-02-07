@@ -7,9 +7,14 @@
 #include "tsh.h"
 #include "data-structs/vector.h"
 
-Configuration config_read(char* filename, size_t length) {
+/*
+ * Reads the T-Shell configuration file for any specified options.
+ * Returns:
+ *   A struct containing all the options set for T-Shell.
+ */
+Configuration config_read(void) {
 	Configuration config = {false, ""};
-	char* path = construct_path(filename, length);
+	char* path = construct_path(".tsh-rc", 7);
 	FILE* rc = fopen(path, "a+");
 	if (rc != NULL) {
 		char line[BUFFER_SIZE];
@@ -28,10 +33,8 @@ Configuration config_read(char* filename, size_t length) {
 			}
 		}
 		fclose(rc);
-	} else {
-		fprintf(stderr, COLOR_RED "RC file not found.\n" COLOR_RESET);
-		fprintf(stderr, COLOR_RED "File must be named \".tsh-rc\" and be in your home dir.\n" COLOR_RESET);
-	}
+	} else
+		fprintf(stderr, COLOR_RED "RC file not found.\nFile must be named \".tsh-rc\" and be in your home dir.\n" COLOR_RESET);
 	free(path);
 	return config;
 }
