@@ -1,12 +1,12 @@
 .\" Manpage for T-Shell.
 .\" Contact tyler@csh.rit.edu to correct errors or typos.
-.TH man 1 "18 December 2013" "1.0" "General Commands Manual"
+.TH tsh 1 "18 December 2013" "1.0" "General Commands Manual"
 .SH NAME
 tsh \- T-Shell
 .SH SYNOPSIS
 tsh
 .SH DESCRIPTION
-T-Shell is a simple Command Line Shell for Linux with support for command aliasing, and redirection.
+T-Shell is a simple Command Line Shell for Linux with support for command aliasing, redirection, and prompt customization.
 .SH OPTIONS
 T-Shell does not take any options.
 .SH BUGS
