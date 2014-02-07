@@ -23,8 +23,7 @@
 /*
  * Changes the current working directory.
  * Argument(s):
- *   Vector* tokens, a pointer to the tokenized user input
- *   int size, the size of the array of tokens
+ *   Vector* tokens: a pointer to the tokenized user input
  */
 static void changeDir(Vector* tokens) {
 	if (tokens->size == 2) { // Changes to the given directory
@@ -47,7 +46,7 @@ static void changeDir(Vector* tokens) {
 /*
  * Runs an external program.
  * Argument(s):
- *   char** extArgv, potential arguments for the program
+ *   char** extArgv: potential arguments for the program
  */
 static void execute(char** extArgv) {
 	int childExitStatus;
