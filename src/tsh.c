@@ -192,8 +192,3 @@ int main(void) {
 	return 0;
 }
 
-#undef COLOR_RED
-#undef COLOR_RESET
-#undef BLANK_SPACE
-#undef BUFFER_SIZE
-#undef STRING_END
