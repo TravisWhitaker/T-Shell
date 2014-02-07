@@ -117,14 +117,20 @@ int main(void) {
 			char first = pieces[i][0];
 			if (first == 'D') { // Directory
 				char* dir = getcwd(NULL, 0);
+				if (config.colors) strcat(prompt, "\x1b[33m");
 				strcat(prompt, dir);
+				if (config.colors) strcat(prompt, COLOR_RESET);
 				strcat(prompt, pieces[i]+1);
 				free(dir);
 			} else if (first == 'U') { // Username
+				if (config.colors) strcat(prompt, "\x1b[36m");
 				strcat(prompt, getenv("USER"));
+				if (config.colors) strcat(prompt, COLOR_RESET);
 				strcat(prompt, pieces[i]+1);
 			} else if (first == 'H') { // Hostname
+				if (config.colors) strcat(prompt, "\x1b[35m");
 				strcat(prompt, getenv("HOSTNAME"));
+				if (config.colors) strcat(prompt, COLOR_RESET);
 				strcat(prompt, pieces[i]+1);
 			} else
 				strcat(prompt, pieces[i]);

@@ -8,14 +8,18 @@
 #include "data-structs/vector.h"
 
 Configuration config_read(char* filename, size_t length) {
-	Configuration config = {""};
+	Configuration config = {false, ""};
 	char* path = construct_path(filename, length);
 	FILE* rc = fopen(path, "a+");
 	if (rc != NULL) {
 		char line[BUFFER_SIZE];
 		while (fgets(line, BUFFER_SIZE, rc) != NULL) {
 			if (strchr(line, '#') == NULL && strlen(line) > 1) {
-				if (contains(line, "PROMPT=")) {
+				if (contains(line, "COLORS=")) {
+					char* colors = substring(line, indexOf(line, '=')+1, strlen(line)-1);
+					if (!strcmp(colors, "ON")) config.colors = true;
+					free(colors);
+				} else if (contains(line, "PROMPT=")) {
 					char* prompt = substring(line, indexOf(line, '=')+1, strlen(line)-1);
 					strcpy(config.prompt, prompt);
 					strcat(config.prompt, "\0");
