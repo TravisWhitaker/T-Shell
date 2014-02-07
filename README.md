@@ -15,6 +15,7 @@
 
 # Features
   - Execution of external programs (Commands).
+  - Prompt Customization (Colors, Username, Current Dir, etc.)
   - History.
   - Command Aliasing.
   - [Redirection][Redirection]:
