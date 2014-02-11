@@ -26,21 +26,18 @@
  *   Vector* tokens: a pointer to the tokenized user input
  */
 static void changeDir(Vector* tokens) {
-	if (tokens->size == 2) { // Changes to the given directory
-		if (chdir(vector_get(tokens, 1).String) == -1) {
-			printf(COLOR_RED);
-			perror("T-Shell");
-			printf(COLOR_RESET);
-		}
-	} // Changes to the user's home directory
-	else if (tokens->size == 1) {
-		if (chdir(getenv("HOME"))) {
-			printf(COLOR_RED);
-			perror("T-Shell");
-			printf(COLOR_RESET);
-		}
+	int error = 0;
+	if (tokens->size == 2) // Changes to the given directory
+		error = chdir(vector_get(tokens, 1).String);
+	else if (tokens->size == 1) // Changes to the user's home directory
+		error = chdir(getenv("HOME"));
+	else
+		printf(COLOR_RED "T-Shell: Too many arguments.\n" COLOR_RESET);
+	if (error) {
+		printf(COLOR_RED);
+		perror("T-Shell");
+		printf(COLOR_RESET);
 	}
-	else printf(COLOR_RED "T-Shell: Too many arguments.\n" COLOR_RESET);
 }
 
 /*
@@ -151,6 +148,7 @@ int main(void) {
 			} else {
 				int freei = 0;
 				//==================================================================================
+				// Expands Tilde '~' to the Users Home Directory
 				if (contains(input, "~")) {
 					char* home = getenv("HOME");
 					int tokenNum = 0;
