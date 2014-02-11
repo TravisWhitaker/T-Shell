@@ -1,6 +1,7 @@
 #ifndef TSH_H
 #define TSH_H
 
+#define ASCII_BACKSPACE 8			// ASCII value for the Backspace character.
 #define ASCII_ESCAPE	27			// ASCII value for the Escape character.
 #define ASCII_SPACE		32 			// ASCII value for the Space character.
 #define ASCII_NULL		0			// ASCII value for Null, marks the end of a string.
