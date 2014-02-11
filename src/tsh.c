@@ -146,9 +146,45 @@ int main(void) {
 		} else if (input[0] != ASCII_NULL) {
 			append_history(1, history_path); // Write input to History file
 			if (!strcmp(input, "exit") || !strcmp(input, "quit") || !strcmp(input, "logout")) {
-				release(input); // Frees user input string
+				free(input);
 				break;
 			} else {
+				int freei = 0;
+				//==================================================================================
+				if (contains(input, "~")) {
+					char* home = getenv("HOME");
+					int tokenNum = 0;
+					int length = 1;
+					char* tempInput = NULL;
+					char** tokens = split_string(input, " ", &tokenNum);
+					length += strlen(tokens[0]);
+					tempInput = realloc(tempInput, ++length * sizeof(char));
+					strcpy(tempInput, tokens[0]);
+					strcat(tempInput, " ");
+					for (register unsigned int i = 1; i < tokenNum; i++) {
+						if (tokens[i][0] == '~') {
+							char* sub = substring(tokens[i], 1, strlen(tokens[i]));
+							char* temp = calloc(strlen(home)+strlen(sub)+1, sizeof(char));
+							strcpy(temp, home);
+							strcat(temp, sub);
+							free(sub);
+							tokens[i] = temp;
+							freei = i;
+						}
+						length += strlen(tokens[i]);
+						tempInput = realloc(tempInput, length * sizeof(char));
+						strcat(tempInput, tokens[i]);
+						if (i < (tokenNum-1)) {
+							tempInput = realloc(tempInput, ++length * sizeof(char));
+							strcat(tempInput, " ");
+						}
+					}
+					free(tokens[freei]);
+					free(tokens);
+					free(input);
+					input = tempInput;
+				}
+				//==================================================================================
 		 		Vector tokens = vector_split(input, " "); // User input tokens
 		 		#define COMMAND vector_get(&tokens, 0).String
 				//==================================================================================
@@ -160,8 +196,8 @@ int main(void) {
 						Vector args = vector_split(line, " ");
 						for (unsigned int j = args.size-1; j > 0; j--)
 							vector_add(&tokens, 1, vector_get(&args, j));
-						release(args.array); /* Deletes the Alias line buffer if the input
-						                        command did not match the current key */
+						free(args.array); /* Deletes the Alias line buffer if the input
+						                     command did not match the current key */
 						break;
 					}
 				}
@@ -181,10 +217,11 @@ int main(void) {
 					//------------------------------------------------------------------------------
 				}
 				#undef COMMAND
-				release(tokens.array); // Deletes the input tokens
-				release(input); // Frees user input
+				//free(tokens.array[freei]);
+				free(tokens.array);
+				free(input);
 			}
-		} else release(input); // Frees user input
+		} else free(input);
 	}
 	free(history_path); // Free History file path
 	alias_free(&rawcmds, &aliases); // Alias Freeing

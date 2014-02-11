@@ -10,18 +10,15 @@
 #include "data-structs/vector.h"
 
 /*
- * Reads a given file.
- * Argument(s):
- *   char** fileName: The file itself
- *   size_t length: The length of the filename
+ * Reads T-Shells alias file for all aliased commands.
  * Memory Management:
  *   Free the elements in the struct member 'array', and the array itself
  *   (Vector is included from the header file, 'data-structs/vector.h')
  * Returns: Array of the lines in the file
  */
-static Vector alias_read(char* fileName, size_t length) {
+static Vector alias_read(void) {
 	Vector contents = vector_init(0);
-	char* filePath = construct_path(fileName, length);
+	char* filePath = construct_path(".tsh-alias", 10);
 	FILE* file = fopen(filePath, "a+");
 	if (file != NULL) {
 		char line[BUFFER_SIZE];
@@ -41,7 +38,7 @@ static Vector alias_read(char* fileName, size_t length) {
 }
 
 void alias_init(HashTable* rawcmds, Vector* aliases) {
-	Vector lines = alias_read(".tsh-alias", 10);
+	Vector lines = alias_read();
 	*aliases = vector_init(lines.size); // Initializes an Array of Aliases
 	*rawcmds = hash_init(lines.size); // Initializes a Hash Table of actual commands
 	for (unsigned int i = 0; i < lines.size; i++) {
@@ -50,21 +47,17 @@ void alias_init(HashTable* rawcmds, Vector* aliases) {
 		char* rawcmd = substring(line, indexOf(line, '\'')+1, strlen(line)-1); // The real command being run (VALUE)
 		vector_set(aliases, i, (GenType) alias);
 		hash_map(rawcmds, alias, rawcmd);
-		release(rawcmd); // Delete Real Command buffer
-		release(line); // Delete Line buffer
+		free(rawcmd);
+		free(line);
 	}
-	release(lines.array); // Delete the Array of Line buffers
+	free(lines.array);
 }
 
 void alias_free(HashTable* rawcmds, Vector* aliases) {
 	for (unsigned int i = 0; i < aliases->size; i++) {
 		hash_unmap(rawcmds, vector_get(aliases, i).String); // Deletes a Bucket
-		release(vector_get(aliases, i).String); // Deletes a Key
+		free(vector_get(aliases, i).String);
 	}
-	release(aliases->array); // Deletes the Array of Aliases
-	release(rawcmds->table); // Deletes the Hash Table of Command Aliases
+	free(aliases->array);
+	free(rawcmds->table);
 }
-
-#undef BLANK_SPACE
-#undef BUFFER_SIZE
-#undef STRING_END

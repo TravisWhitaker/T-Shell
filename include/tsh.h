@@ -17,14 +17,4 @@
 
 extern char* construct_path(char* filename, size_t length);
 
-/*
- * Frees the memory pointed to by 'ptr'
- * Argument(s):
- *   void* ptr: pointer to ANY allocated memory
- */
-static inline void release(void* ptr) {
-	free(ptr);
-	ptr = NULL;
-}
-
 #endif
