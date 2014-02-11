@@ -135,7 +135,7 @@ int main(void) {
 		free(pieces);
 		//==================================================================================
 		char* input = readline(prompt); // Get User input
-		free(prompt); // Free prompt string
+		free(prompt);
 		add_history(input); // Add input to History list
 		if (input == NULL) { // Exits when Ctrl-D is pressed
 			printf("\n");
@@ -146,11 +146,11 @@ int main(void) {
 				free(input);
 				break;
 			} else {
-				int freei = 0;
 				//==================================================================================
 				// Expands Tilde '~' to the Users Home Directory
 				if (contains(input, "~")) {
 					char* home = getenv("HOME");
+					int freei = 0;
 					int tokenNum = 0;
 					int length = 1;
 					char* tempInput = NULL;
@@ -188,11 +188,11 @@ int main(void) {
 				//==================================================================================
 				// Injecting the real commands into user input before running.
 				char line[BUFFER_SIZE];
-				for (unsigned int i = 0; i < aliases.size; i++) {
+				for (register unsigned int i = 0; i < aliases.size; i++) {
 					if (!strcmp(COMMAND, vector_get(&aliases, i).String)) { // Does the command have an alias?
 						strncpy(line, hash_lookUp(&rawcmds, COMMAND).String, sizeof(line));
 						Vector args = vector_split(line, " ");
-						for (unsigned int j = args.size-1; j > 0; j--)
+						for (register unsigned int j = args.size-1; j > 0; j--)
 							vector_add(&tokens, 1, vector_get(&args, j));
 						free(args.array); /* Deletes the Alias line buffer if the input
 						                     command did not match the current key */
@@ -215,7 +215,6 @@ int main(void) {
 					//------------------------------------------------------------------------------
 				}
 				#undef COMMAND
-				//free(tokens.array[freei]);
 				free(tokens.array);
 				free(input);
 			}
