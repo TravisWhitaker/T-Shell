@@ -32,10 +32,10 @@ static void changeDir(Vector* tokens) {
 	else if (tokens->size == 1) // Changes to the user's home directory
 		error = chdir(getenv("HOME"));
 	else
-		printf(COLOR_RED "T-Shell: Too many arguments.\n" COLOR_RESET);
+		printf(COLOR_RED "T-Shell: cd: Too many arguments.\n" COLOR_RESET);
 	if (error) {
 		printf(COLOR_RED);
-		perror("T-Shell");
+		perror("T-Shell: cd");
 		printf(COLOR_RESET);
 	}
 }
@@ -194,8 +194,7 @@ int main(void) {
 						Vector args = vector_split(line, " ");
 						for (register unsigned int j = args.size-1; j > 0; j--)
 							vector_add(&tokens, 1, vector_get(&args, j));
-						free(args.array); /* Deletes the Alias line buffer if the input
-						                     command did not match the current key */
+						free(args.array);
 						break;
 					}
 				}
