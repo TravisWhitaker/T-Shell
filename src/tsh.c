@@ -52,13 +52,13 @@ static void execute(char** extArgv) {
 	if (childPID >= 0) { // Was fork successful?
 		if (childPID == 0) {
 			if (execvp(extArgv[0], extArgv) == -1) { // Run child process
-				printf(COLOR_RED "T-Shell: \'%s\' is not a recognized command...\n" COLOR_RESET, extArgv[0]);
+				printf(COLOR_RED "T-Shell: exec: \'%s\' is not a recognized command...\n" COLOR_RESET, extArgv[0]);
 				exit(EXIT_FAILURE);
 			}
 		} else wait(&childExitStatus); // Parent (this) process waits for child to finish
 	} else {
 		printf(COLOR_RED);
-		perror("T-Shell");
+		perror("T-Shell: fork");
 		printf(COLOR_RESET);
 	}
 }
@@ -145,6 +145,8 @@ int main(void) {
 			if (!strcmp(input, "exit") || !strcmp(input, "quit") || !strcmp(input, "logout")) {
 				free(input);
 				break;
+			} else if (!strcmp(input, "history clear")) {
+				truncate(history_path, 0);
 			} else {
 				//==================================================================================
 				// Expands Tilde '~' to the Users Home Directory
