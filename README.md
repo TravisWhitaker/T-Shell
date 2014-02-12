@@ -13,9 +13,14 @@
 
 ***
 
-# Features
+## Features
   - Execution of external programs (Commands).
-  - Prompt Customization (Colors, Username, Current Dir, etc.)
+  - Prompt Customization:
+    - Can be any string you want.
+    - Special strings:
+      - Username (%U).
+      - Hostname (%H).
+      - Current Directory (%D).
   - History.
   - Command Aliasing.
   - [Redirection][Redirection]:
@@ -24,6 +29,14 @@
       - Overwrite file.
       - Append to file.
     - Input.
+
+***
+
+## Builtin Commands
+  - `exit`, `quit`, and `logout` Close the shell.
+  - `history clear` Empties the history file.
+  - `cd [dir]` Attempts to change into the given directory.
+  - `help` Displays and describes builtin commands.
 
 ***
 
