@@ -57,7 +57,7 @@
           - [Automatic][Automatic].
           - [Static][Static].
           - [Dynamic][Dynamic].
-      - File I/O (Text & Binary).
+      - File I/O.
       - Using Structs and Unions to build more complex data types.
       - Optimizing with keywords like `inline` and `register`.
 
@@ -80,17 +80,17 @@
   - glibc (2.16 or later) ([GNU C Library][GLIBC])
   - gcc ([GNU Compiler Collection][GCC]) OR clang ([Clang][Clang]/[LLVM][LLVM])
   - readline ([GNU Readline][Readline])
-  - Data-Structs/[hash][Hash]
-  - Data-Structs/[vector][Vector]
-  - [StrUtil][StrUtil]
+  - Data-Structs/[hash][Hash] (Included)
+  - Data-Structs/[vector][Vector] (Included)
+  - [StrUtil][StrUtil] (Included)
 
 ***
 
 ## How to Install:
   To install, do the following...<br>
-    1) Dowload the zip file from the link on the right.<br>
-    2) `unzip master.zip`<br>
-    3) `cd T-Shell-master`<br>
+    1) Dowload the zip file from the link on the right or `git clone` this repo<br>
+    2) `unzip master.zip` (If zip was downloaded)<br>
+    3) `cd T-Shell-master` or `cd T-Shell`<br>
     4) `gmake`<br>
     5) `[sudo] gmake install`<br><br>
   Notes:<br>
