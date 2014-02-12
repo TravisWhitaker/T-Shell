@@ -91,8 +91,8 @@
     1) Dowload the zip file from the link on the right.<br>
     2) `unzip master.zip`<br>
     3) `cd T-Shell-master`<br>
-    4) `make`<br>
-    5) `[sudo] make install`<br><br>
+    4) `gmake`<br>
+    5) `[sudo] gmake install`<br><br>
   Notes:<br>
   1) The Makefile specifies [Clang][Clang]/[LLVM][LLVM] as the compiler, feel free to change that.<br>
   2) When un-installing, you should remove T-Shell from `/etc/shells`.
