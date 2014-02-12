@@ -142,7 +142,14 @@ int main(void) {
 			break;
 		} else if (input[0] != ASCII_NULL) {
 			append_history(1, history_path); // Write input to History file
-			if (!strcmp(input, "exit") || !strcmp(input, "quit") || !strcmp(input, "logout")) {
+			if (!strcmp(input, "help")) {
+				puts(COLOR_GREEN);
+				puts("help: Displays this message.");
+				puts("exit, quit, logout: Closes the shell.");
+				puts("cd [dir]: Attempts to change into the given directory.");
+				puts("history clear: Empties the history file.");
+				puts(COLOR_RESET);
+			} else if (!strcmp(input, "exit") || !strcmp(input, "quit") || !strcmp(input, "logout")) {
 				free(input);
 				break;
 			} else if (!strcmp(input, "history clear")) {
