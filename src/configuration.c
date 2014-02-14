@@ -34,7 +34,7 @@ Configuration config_read(void) {
 		}
 		fclose(rc);
 	} else
-		fprintf(stderr, COLOR_RED "RC file not found.\nFile must be named \".tsh-rc\" and be in your home dir.\n" COLOR_RESET);
+		fprintf(stderr, COLOR_RED "RC file not found.\nFile must be named \".tsh-rc\" and be in your home directory.\n" COLOR_RESET);
 	free(path);
 	return config;
 }

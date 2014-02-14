@@ -138,7 +138,7 @@ int main(void) {
 		free(prompt);
 		add_history(input); // Add input to History list
 		if (input == NULL) { // Exits when Ctrl-D is pressed
-			printf("\n");
+			puts("");
 			break;
 		} else if (input[0] != ASCII_NULL) {
 			append_history(1, history_path); // Write input to History file
