@@ -1,15 +1,44 @@
 .\" Manpage for T-Shell.
 .\" Contact tyler@csh.rit.edu to correct errors or typos.
-.TH tsh 1 "18 December 2013" "1.0" "General Commands Manual"
+.TH TSH 1 "2014 February 15" "1.0" "General Commands Manual"
+
 .SH NAME
 tsh \- T-Shell
+
 .SH SYNOPSIS
 tsh
+
 .SH DESCRIPTION
 T-Shell is a simple Command Line Shell for Linux with support for command aliasing, redirection, and prompt customization.
+
 .SH OPTIONS
 T-Shell does not take any options.
-.SH BUGS
-No known bugs.
+
+.SH CONFIGURATION
+Currently, the shell can only have its prompt configured. The configuration file is named '.tsh-rc' and is located in the users home directory. The 2 options with examples are as follows:
+
+.SS COLORS
+COLORS=[ON|OFF]
+
+.SS PROMPT
+PROMPT=<Any string>
+.br
+There are 3 special variables that can be used in the prompt string; %D, %U, and %H, which specify the Current Directory, the Username, and the Hostname respectively.
+
+.SH ALIASING
+T-Shell supports a Bash style alias syntax in the file '.tsh-alias' which is located in the users home directory.
+
+.SH BUILTIN COMMANDS
+help: Displays a list that describes each builtin command.
+.br
+exit | quit | logout: Closes the shell.
+.br
+cd [dir]: Attempts to change into the given directory.
+.br
+history clear: Empties the history file.
+
+.SH BUGS / ISSUES
+T-Shell fails to compile on Mac OS X 10.9, due to missing symbols in readline.
+
 .SH AUTHOR
 Tyler Cromwell (tyler@csh.rit.edu)
