@@ -23,10 +23,19 @@ COLORS=[ON|OFF]
 .SS PROMPT
 PROMPT=<Any string>
 .br
+.P
 There are 3 special variables that can be used in the prompt string; %D, %U, and %H, which specify the Current Directory, the Username, and the Hostname respectively.
 
 .SH ALIASING
-T-Shell supports a Bash style alias syntax in the file '.tsh-alias' which is located in the users home directory.
+T-Shell supports a Bash style alias syntax in the file '.tsh-alias' which is located in the users home directory. The format is as follows:
+.br
+.P
+ALIAS = 'COMMAND'
+.br
+.P
+An example would be:
+.br
+tree = 'tree -C'
 
 .SH BUILTIN COMMANDS
 help: Displays a list that describes each builtin command.
@@ -37,8 +46,10 @@ cd [dir]: Attempts to change into the given directory.
 .br
 history clear: Empties the history file.
 
-.SH BUGS / ISSUES
+.SH KNOWN BUGS / ISSUES
 T-Shell fails to compile on Mac OS X 10.9, due to missing symbols in readline.
+.br
+Any bugs found should be submitted to the GitHub Repository, the url is https://github.com/tyler-cromwell/T-Shell/issues .
 
 .SH AUTHOR
 Tyler Cromwell (tyler@csh.rit.edu)
