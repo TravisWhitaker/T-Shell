@@ -120,10 +120,9 @@ int main(void) {
 					strncat(prompt, COLOR_YELLOW, COLOR_LENGTH);
 					strncat(prompt, "\0", 1);
 				}
-				length += strlen(dir)+1;
+				length += strlen(dir);
 				prompt = realloc(prompt, length * sizeof(char));
 				strncat(prompt, dir, strlen(dir));
-				strncat(prompt, "\0", 1);
 				if (config.colors) {
 					length += COLOR_LENGTH;
 					prompt = realloc(prompt, length * sizeof(char));
