@@ -102,7 +102,7 @@ int main(void) {
 		// Building the Prompt from configuration
 		char promptb[strlen(config.prompt)];
 		strcpy(promptb, config.prompt);
-		char* prompt = NULL;
+		char* prompt = calloc(0, sizeof(char));
 		int length = 0;
 		int amount = 0;
 		char** pieces = split_string(promptb, "%", &amount);
@@ -191,7 +191,7 @@ int main(void) {
 		if (input == NULL) { // Exits when Ctrl-D is pressed
 			puts("");
 			break;
-		} else if (input[0] != ASCII_NULL) {
+		} else if (input[0] != ASCII_NULL) { // If the user typed something
 			append_history(1, history_path); // Write input to History file
 			if (!strcmp(input, "help")) {
 				puts(COLOR_GREEN);
