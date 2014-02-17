@@ -4,6 +4,7 @@
 #define ASCII_BACKSPACE 8			// ASCII value for the Backspace character.
 #define ASCII_ESCAPE	27			// ASCII value for the Escape character.
 #define ASCII_SPACE		32 			// ASCII value for the Space character.
+#define ASCII_NEWLINE	10			// ASCII value for the Newline character.
 #define ASCII_NULL		0			// ASCII value for Null, marks the end of a string.
 #define COLOR_WHITE		"\x1b[37m"	// Colors the following text White.
 #define COLOR_CYAN		"\x1b[36m"	// Colors trailing text Cyan.
@@ -13,6 +14,7 @@
 #define COLOR_GREEN		"\x1b[32m"	// Colors trailing text Green.
 #define COLOR_RED		"\x1b[31m"	// Colors trailing text Red.
 #define COLOR_RESET		"\x1b[0m"	// Resets all Terminal SGR parameters.
+#define COLOR_LENGTH	5			// The Length of the color macro strings
 #define BUFFER_SIZE		BUFSIZ/32	// New buffer size.
 
 extern char* construct_path(char* filename, size_t length);
