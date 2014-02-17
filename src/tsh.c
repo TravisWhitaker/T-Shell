@@ -99,39 +99,91 @@ int main(void) {
 	char* history_path = construct_path(".tsh-history", 12);
 	while (true) {
 		//==================================================================================
-		// Building the Prompt
+		// Building the Prompt from configuration
 		char promptb[strlen(config.prompt)];
 		strcpy(promptb, config.prompt);
-		char* prompt = calloc(BUFFER_SIZE, sizeof(char));
+		char* prompt = NULL;
+		int length = 0;
 		int amount = 0;
 		char** pieces = split_string(promptb, "%", &amount);
-		for (size_t i = 0; i < amount; i++) {
+		for (size_t i = 0; i < amount; i++) { // For each token
 			if (contains(pieces[i], "\\n")) { // Newline
-				replaceAll(pieces[i], '\\', 8);
-				replaceAll(pieces[i], 'n', 10);
+				replaceAll(pieces[i], '\\', ASCII_BACKSPACE);
+				replaceAll(pieces[i], 'n', ASCII_NEWLINE);
 			}
 			char first = pieces[i][0];
 			if (first == 'D') { // Directory
 				char* dir = getcwd(NULL, 0);
-				if (config.colors) strcat(prompt, COLOR_YELLOW);
-				strcat(prompt, dir);
-				if (config.colors) strcat(prompt, COLOR_RESET);
-				strcat(prompt, pieces[i]+1);
+				if (config.colors) {
+					length += COLOR_LENGTH+1;
+					prompt = realloc(prompt, length * sizeof(char));
+					strncat(prompt, COLOR_YELLOW, COLOR_LENGTH);
+					strncat(prompt, "\0", 1);
+				}
+				length += strlen(dir)+1;
+				prompt = realloc(prompt, length * sizeof(char));
+				strncat(prompt, dir, strlen(dir));
+				strncat(prompt, "\0", 1);
+				if (config.colors) {
+					length += COLOR_LENGTH;
+					prompt = realloc(prompt, length * sizeof(char));
+					strncat(prompt, COLOR_RESET, strlen(COLOR_RESET));
+					strncat(prompt, "\0", 1);
+				}
+				length += strlen(pieces[i]+1)+1;
+				prompt = realloc(prompt, length * sizeof(char));
+				strncat(prompt, pieces[i]+1, strlen(pieces[i]+1));
+				strncat(prompt, "\0", 1);
 				free(dir);
 			} else if (first == 'U') { // Username
-				if (config.colors) strcat(prompt, COLOR_CYAN);
-				strcat(prompt, getenv("USER"));
-				if (config.colors) strcat(prompt, COLOR_RESET);
-				strcat(prompt, pieces[i]+1);
+				if (config.colors) {
+					length += COLOR_LENGTH+1;
+					prompt = realloc(prompt, length * sizeof(char));
+					strncat(prompt, COLOR_CYAN, strlen(COLOR_CYAN));
+					strncat(prompt, "\0", 1);
+				}
+				length += strlen(getenv("USER"))+1;
+				prompt = realloc(prompt, length * sizeof(char));
+				strncat(prompt, getenv("USER"), strlen(getenv("USER")));
+				strncat(prompt, "\0", 1);
+				if (config.colors) {
+					length += COLOR_LENGTH;
+					prompt = realloc(prompt, length * sizeof(char));
+					strncat(prompt, COLOR_RESET, strlen(COLOR_RESET));
+					strncat(prompt, "\0", 1);
+				}
+				length += strlen(pieces[i]+1)+1;
+				prompt = realloc(prompt, length * sizeof(char));
+				strncat(prompt, pieces[i]+1, strlen(pieces[i]+1));
+				strncat(prompt, "\0", 1);
 			} else if (first == 'H') { // Hostname
-				if (config.colors) strcat(prompt, COLOR_MAGENTA);
-				strcat(prompt, getenv("HOSTNAME"));
-				if (config.colors) strcat(prompt, COLOR_RESET);
-				strcat(prompt, pieces[i]+1);
-			} else
-				strcat(prompt, pieces[i]);
+				if (config.colors) {
+					length += COLOR_LENGTH+1;
+					prompt = realloc(prompt, length * sizeof(char));
+					strncat(prompt, COLOR_MAGENTA, strlen(COLOR_MAGENTA));
+					strncat(prompt, "\0", 1);
+				}
+				length += strlen(getenv("HOSTNAME"))+1;
+				prompt = realloc(prompt, length * sizeof(char));
+				strncat(prompt, getenv("HOSTNAME"), strlen(getenv("HOSTNAME")));
+				strncat(prompt, "\0", 1);
+				if (config.colors) {
+					length += COLOR_LENGTH;
+					prompt = realloc(prompt, length * sizeof(char));
+					strncat(prompt, COLOR_RESET, strlen(COLOR_RESET));
+					strncat(prompt, "\0", 1);
+				}
+				length += strlen(pieces[i]+1)+1;
+				prompt = realloc(prompt, length * sizeof(char));
+				strncat(prompt, pieces[i]+1, strlen(pieces[i]+1));
+				strncat(prompt, "\0", 1);
+			} else {
+				length += strlen(pieces[i])+1;
+				prompt = realloc(prompt, length * sizeof(char));
+				strncat(prompt, pieces[i], strlen(pieces[i]));
+				strncat(prompt, "\0", 1);
+			}
 		}
-		strcat(prompt, " \0");
 		free(pieces);
 		//==================================================================================
 		char* input = readline(prompt); // Get User input
