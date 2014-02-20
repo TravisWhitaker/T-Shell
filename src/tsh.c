@@ -102,8 +102,8 @@ int main(void) {
 		// Building the Prompt from configuration
 		char promptb[strlen(config.prompt)];
 		strcpy(promptb, config.prompt);
-		char* prompt = calloc(0, sizeof(char));
 		int length = 0;
+		char* prompt = calloc(0, sizeof(char));
 		int amount = 0;
 		char** pieces = split_string(promptb, "%", &amount);
 		for (size_t i = 0; i < amount; i++) { // For each token
