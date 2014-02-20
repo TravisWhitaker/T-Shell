@@ -29,6 +29,7 @@
       - Overwrite file.
       - Append to file.
     - Input.
+  - Scripting (In progress).
 
 ***
 
