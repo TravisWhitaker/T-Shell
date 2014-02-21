@@ -80,6 +80,7 @@
 ## Dependencies:
   - glibc (2.16 or later) ([GNU C Library][GLIBC])
   - gcc ([GNU Compiler Collection][GCC]) OR clang ([Clang][Clang]/[LLVM][LLVM])
+  - gmake ([GNU Make][Gmake])
   - readline ([GNU Readline][Readline])
   - Data-Structs/[hash][Hash] (Included)
   - Data-Structs/[vector][Vector] (Included)
@@ -104,6 +105,7 @@
 [Clang]: http://en.wikipedia.org/wiki/Clang
 [LLVM]: http://en.wikipedia.org/wiki/LLVM
 [Preprocessor]: http://en.wikipedia.org/wiki/C_preprocessor
+[Gmake]: http://www.gnu.org/software/make/
 [Syscall]: http://en.wikipedia.org/wiki/System_call
 [Automatic]: http://en.wikipedia.org/wiki/Automatic_memory_allocation
 [Static]: http://en.wikipedia.org/wiki/Static_memory_allocation
