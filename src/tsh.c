@@ -164,7 +164,7 @@ int main(void) {
 				char line[BUFFER_SIZE];
 				for (register unsigned int i = 0; i < aliases.size; i++) {
 					if (!strcmp(COMMAND, (char*) vector_get(&aliases, i))) { // Does the command have an alias?
-						strncpy(line, hash_lookUp(&rawcmds, COMMAND).String, sizeof(line));
+						strncpy(line, (char*) hash_lookUp(&rawcmds, COMMAND), sizeof(line));
 						Vector args = vector_split(line, " ");
 						for (register unsigned int j = args.size-1; j > 0; j--)
 							vector_add(&tokens, 1, vector_get(&args, j));
