@@ -98,93 +98,7 @@ int main(void) {
 	alias_init(&rawcmds, &aliases);
 	char* history_path = construct_path(".tsh-history", 12);
 	while (true) {
-		//==================================================================================
-		// Building the Prompt from configuration
-		char promptb[strlen(config.prompt)];
-		strcpy(promptb, config.prompt);
-		int length = 0;
-		char* prompt = calloc(0, sizeof(char));
-		int amount = 0;
-		char** pieces = split_string(promptb, "%", &amount);
-		for (size_t i = 0; i < amount; i++) { // For each token
-			if (contains(pieces[i], "\\n")) { // Newline
-				replaceAll(pieces[i], '\\', ASCII_BACKSPACE);
-				replaceAll(pieces[i], 'n', ASCII_NEWLINE);
-			}
-			char first = pieces[i][0];
-			if (first == 'D') { // Directory
-				char* dir = getcwd(NULL, 0);
-				if (config.colors) {
-					length += COLOR_LENGTH+1;
-					prompt = realloc(prompt, length * sizeof(char));
-					strncat(prompt, COLOR_YELLOW, COLOR_LENGTH);
-					strncat(prompt, "\0", 1);
-				}
-				length += strlen(dir);
-				prompt = realloc(prompt, length * sizeof(char));
-				strncat(prompt, dir, strlen(dir));
-				if (config.colors) {
-					length += COLOR_LENGTH;
-					prompt = realloc(prompt, length * sizeof(char));
-					strncat(prompt, COLOR_RESET, strlen(COLOR_RESET));
-					strncat(prompt, "\0", 1);
-				}
-				length += strlen(pieces[i]+1)+1;
-				prompt = realloc(prompt, length * sizeof(char));
-				strncat(prompt, pieces[i]+1, strlen(pieces[i]+1));
-				strncat(prompt, "\0", 1);
-				free(dir);
-			} else if (first == 'U') { // Username
-				if (config.colors) {
-					length += COLOR_LENGTH+1;
-					prompt = realloc(prompt, length * sizeof(char));
-					strncat(prompt, COLOR_CYAN, strlen(COLOR_CYAN));
-					strncat(prompt, "\0", 1);
-				}
-				length += strlen(getenv("USER"))+1;
-				prompt = realloc(prompt, length * sizeof(char));
-				strncat(prompt, getenv("USER"), strlen(getenv("USER")));
-				strncat(prompt, "\0", 1);
-				if (config.colors) {
-					length += COLOR_LENGTH;
-					prompt = realloc(prompt, length * sizeof(char));
-					strncat(prompt, COLOR_RESET, strlen(COLOR_RESET));
-					strncat(prompt, "\0", 1);
-				}
-				length += strlen(pieces[i]+1)+1;
-				prompt = realloc(prompt, length * sizeof(char));
-				strncat(prompt, pieces[i]+1, strlen(pieces[i]+1));
-				strncat(prompt, "\0", 1);
-			} else if (first == 'H') { // Hostname
-				if (config.colors) {
-					length += COLOR_LENGTH+1;
-					prompt = realloc(prompt, length * sizeof(char));
-					strncat(prompt, COLOR_MAGENTA, strlen(COLOR_MAGENTA));
-					strncat(prompt, "\0", 1);
-				}
-				length += strlen(getenv("HOSTNAME"))+1;
-				prompt = realloc(prompt, length * sizeof(char));
-				strncat(prompt, getenv("HOSTNAME"), strlen(getenv("HOSTNAME")));
-				strncat(prompt, "\0", 1);
-				if (config.colors) {
-					length += COLOR_LENGTH;
-					prompt = realloc(prompt, length * sizeof(char));
-					strncat(prompt, COLOR_RESET, strlen(COLOR_RESET));
-					strncat(prompt, "\0", 1);
-				}
-				length += strlen(pieces[i]+1)+1;
-				prompt = realloc(prompt, length * sizeof(char));
-				strncat(prompt, pieces[i]+1, strlen(pieces[i]+1));
-				strncat(prompt, "\0", 1);
-			} else {
-				length += strlen(pieces[i])+1;
-				prompt = realloc(prompt, length * sizeof(char));
-				strncat(prompt, pieces[i], strlen(pieces[i]));
-				strncat(prompt, "\0", 1);
-			}
-		}
-		free(pieces);
-		//==================================================================================
+		char* prompt = config_build_prompt(&config); // Building the Prompt from configuration
 		char* input = readline(prompt); // Get User input
 		free(prompt);
 		add_history(input); // Add input to History list
@@ -283,4 +197,3 @@ int main(void) {
 	alias_free(&rawcmds, &aliases); // Alias Freeing
 	return 0;
 }
-
