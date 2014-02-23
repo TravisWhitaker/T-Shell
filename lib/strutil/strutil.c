@@ -154,7 +154,7 @@ Vector vector_split(char* string, const char* token) {
 	char* part;
 	part = strtok(string, token);
 	for (unsigned int i = 0; part != NULL; i++) {
-		vector_add(&tokens, i, (GenType) part);
+		vector_add(&tokens, i, part);
 		part = strtok(NULL, token);
 	}
 	return tokens;

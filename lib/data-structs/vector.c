@@ -13,19 +13,18 @@
 /*
  * Constructs a resizable array using a struct named, Vector.
  * The struct 'Vector' has two members,
- * 	  int size: the number of indexes in the array
- * 	  GenType* array: a union pointer
- * 	  (GenType is included from the header file, 'Vector.h')
+ * 	  int size: the number of indexes in the array.
+ * 	  void** array: a pointer to an array of pointers.
  * Argument(s):
  * 	  int size: The size of the array.
- * 	  GenType* array: The pointer to the array.
+ * 	  void** array: The pointer to the array.
  * Memory Management:
  * 	  free the pointer to the array when done.
  * Returns: The struct representing a resizable array.
  */
 Vector vector_init(int size) {
 	Vector list;
-	list.array = (GenType*) calloc(size, sizeof(GenType));
+	list.array = calloc(size, sizeof(void*));
 	list.size = size;
 	return list;
 }
@@ -47,9 +46,9 @@ void vector_empty(Vector* list) {
  *    int index: the location to retrieve the element from.
  * Returns: The element retrieved from the array.
  */
- GenType vector_get(Vector* list, int index) {
+ void* vector_get(Vector* list, int index) {
 	#ifdef VECTOR_DEBUG
-		printf(COLOR_CYAN "VECTOR: GET: %s\n" COLOR_RESET, list->array[index].String);
+		printf(COLOR_CYAN "VECTOR: GET: %s\n" COLOR_RESET, (char*) list->array[index]);
 	#endif
 	return list->array[index];
 }
@@ -60,9 +59,9 @@ void vector_empty(Vector* list) {
  * Argument(s):
  *    Vector* list: points to the struct containing the array.
  *    int index: the location to set the element at.
- *    GenType value: the new value.
+ *    void* value: the new value.
  */
-void vector_set(Vector* list, int index, GenType value) {
+void vector_set(Vector* list, int index, void* value) {
 	list->array[index] = value;
 }
 
@@ -71,18 +70,18 @@ void vector_set(Vector* list, int index, GenType value) {
  * Argument(s):
  *    Vector* list: points to the struct containing the array.
  *    int index: the location to add the element to.
- *    GenType value: the new value.
+ *    void* value: the new value.
  */
-void vector_add(Vector* list, int index, GenType value) {
+void vector_add(Vector* list, int index, void* value) {
 	#ifdef VECTOR_DEBUG
 		printf(COLOR_CYAN "VECTOR: Adding value to index %d\n" COLOR_RESET, index);
 	#endif
 	list->size += 1;
-	GenType* tmp = (GenType*) calloc(list->size, sizeof(GenType));
+	void** tmp = calloc(list->size, sizeof(void*));
 	unsigned int i = 0, o = 0;
 	while (i < list->size) {
 		if (i == index) {
-			((GenType*) tmp)[i] = value;
+			((void**) tmp)[i] = value;
 			o++;
 		} else tmp[i] = vector_get(list, i-o);
 		i++;
@@ -103,7 +102,7 @@ void vector_delete(Vector* list, int index) {
 		printf(COLOR_CYAN "VECTOR: Deleting value at index %d\n" COLOR_RESET, index);
 	#endif
 	list->size -= 1;
-	GenType* tmp = (GenType*) calloc(list->size, sizeof(GenType));
+	void** tmp = calloc(list->size, sizeof(void*));
 	unsigned int i = 0, o = 0;
 	while (i < list->size) {
 		if (i == index) o++;
