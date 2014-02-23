@@ -33,7 +33,7 @@ HashTable hash_init(int size) {
 	HashTable table;
 	if (size < 1) table.size = 1;
 	else table.size = size;
-	table.table = (GenType*) calloc(size, sizeof(GenType));
+	table.table = calloc(size, sizeof(void*));
 	return table;
 }
 
@@ -61,7 +61,7 @@ static int hash(char* key, int tableSize) {
  * Returns: The value associated with the given key.
  * 	  		(GenType is included from the header file, 'HashTable.h')
  */
-GenType hash_lookUp(HashTable* table, char* key) {
+void* hash_lookUp(HashTable* table, char* key) {
 	#ifdef HASH_DEBUG
 		printf(COLOR_MAGENTA "HASH: LOOKUP: Looking up \"%s\"\n" COLOR_RESET, key);
 	#endif
@@ -70,11 +70,11 @@ GenType hash_lookUp(HashTable* table, char* key) {
 	while (iterations < table->size) {
 		if (index == table->size) index = 0; /* Here to make sure all buckets 
 		                                        in the table are checked. */
-		if (BUCKET.String != NULL) { // If there is something in this bucket
+		if (BUCKET != NULL) { // If there is something in this bucket
 			#ifdef HASH_DEBUG
-				printf(COLOR_MAGENTA "HASH: LOOKUP: > %s\n" COLOR_RESET, BUCKET.String);
+				printf(COLOR_MAGENTA "HASH: LOOKUP: > %s\n" COLOR_RESET, (char*) BUCKET);
 			#endif
-			char* buffer = substring(BUCKET.String, 0, indexOf(BUCKET.String, SPACE));
+			char* buffer = substring((char*) BUCKET, 0, indexOf((char*) BUCKET, SPACE));
 			char bucketKey[strlen(buffer)];
 			for (unsigned int i = 0; i < strlen(buffer); i++)
 				bucketKey[i] = buffer[i]; // Collecting the bucket key
@@ -82,7 +82,7 @@ GenType hash_lookUp(HashTable* table, char* key) {
 			free(buffer);
 			if (!strcmp(key, bucketKey)) {// If the given key matches the key in the bucket.
 				#ifdef HASH_DEBUG
-					printf(COLOR_MAGENTA "HASH: LOOKUP: Found \"%s\"\n" COLOR_RESET, BUCKET.String);
+					printf(COLOR_MAGENTA "HASH: LOOKUP: Found \"%s\"\n" COLOR_RESET, (char*) BUCKET);
 				#endif
 				return BUCKET;
 			}
@@ -93,7 +93,7 @@ GenType hash_lookUp(HashTable* table, char* key) {
 	#ifdef HASH_DEBUG
 		printf(COLOR_MAGENTA "HASH: LOOKUP: Nothing found\n" COLOR_RESET);
 	#endif
-	return (GenType) NULL;
+	return NULL;
 }
 
 /*
@@ -114,21 +114,21 @@ int hash_map(HashTable* table, char* key, char* value) {
 	unsigned int iterations = 0;
 	while (iterations < table->size) {
 		if (index == table->size) index = 0;
-		if (BUCKET.String == NULL) { // If there is nothing in this bucket
+		if (BUCKET == NULL) { // If there is nothing in this bucket
 			#ifdef HASH_DEBUG
 				printf(COLOR_MAGENTA "HASH: MAP: \"%s\" mapped to \"%s\" in bucket %d\n" COLOR_RESET, key, value, index);
 			#endif
-			BUCKET = (GenType) buffer;
+			BUCKET = buffer;
 			return index;
 		} else {
-			char* bucketKey = substring(BUCKET.String, 0, strlen(key));
+			char* bucketKey = substring((char*) BUCKET, 0, strlen(key));
 			if (!strcmp(key, bucketKey)) { // If the given key matches the key in the bucket.
 				#ifdef HASH_DEBUG
 					printf(COLOR_MAGENTA "HASH: MAP: \"%s\" mapped to \"%s\" in bucket %d\n" COLOR_RESET, key, value, index);
 				#endif
 				free(bucketKey);
-				free(BUCKET.String);
-				BUCKET = (GenType) buffer;
+				free(BUCKET);
+				BUCKET = buffer;
 				return index;
 			}
 			free(bucketKey);
@@ -154,8 +154,8 @@ void hash_unmap(HashTable* table, char* key) {
 	unsigned int iterations = 0;
 	while (iterations < table->size) {
 		if (index == table->size) index = 0;
-		if (BUCKET.String != NULL) { // If there is something in this bucket
-			char* buffer = substring(BUCKET.String, 0, strlen(key));
+		if (BUCKET != NULL) { // If there is something in this bucket
+			char* buffer = substring((char*) BUCKET, 0, strlen(key));
 			char bucketKey[strlen(buffer)];
 			for (unsigned int i = 0; i < strlen(buffer); i++) {
 				bucketKey[i] = buffer[i]; // Collecting the bucket key
@@ -172,8 +172,8 @@ void hash_unmap(HashTable* table, char* key) {
 				#ifdef HASH_DEBUG
 					printf(COLOR_MAGENTA "HASH: UNMAP: Unmapped \"%s\" from bucket %d\n" COLOR_RESET, key, index);
 				#endif
-				free(BUCKET.String);
-				BUCKET = (GenType) NULL;
+				free(BUCKET);
+				BUCKET = NULL;
 				break;
 			}
 		}
