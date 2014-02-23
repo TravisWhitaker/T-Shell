@@ -28,7 +28,7 @@ static Vector alias_read(void) {
 				char* modLine = calloc(strlen(line), sizeof(char)); // Line buffer
 				memcpy(modLine, line, strlen(line)-1);
 				modLine[strlen(line)-1] = ASCII_NULL;
-				vector_add(&contents, i, (GenType) modLine); // Add line to list of contents
+				vector_add(&contents, i, modLine); // Add line to list of contents
 				i++;
 			}
 		fclose(file);
@@ -42,10 +42,10 @@ void alias_init(HashTable* rawcmds, Vector* aliases) {
 	*aliases = vector_init(lines.size); // Initializes an Array of Aliases
 	*rawcmds = hash_init(lines.size); // Initializes a Hash Table of actual commands
 	for (unsigned int i = 0; i < lines.size; i++) {
-		char* line = vector_get(&lines, i).String; // A line in the file
+		char* line = (char*) vector_get(&lines, i); // A line in the file
 		char* alias = substring(line, 0, indexOf(line, ASCII_SPACE)); // The command alias (KEY)
 		char* rawcmd = substring(line, indexOf(line, '\'')+1, strlen(line)-1); // The real command being run (VALUE)
-		vector_set(aliases, i, (GenType) alias);
+		vector_set(aliases, i, alias);
 		hash_map(rawcmds, alias, rawcmd);
 		free(rawcmd);
 		free(line);
@@ -55,8 +55,8 @@ void alias_init(HashTable* rawcmds, Vector* aliases) {
 
 void alias_free(HashTable* rawcmds, Vector* aliases) {
 	for (unsigned int i = 0; i < aliases->size; i++) {
-		hash_unmap(rawcmds, vector_get(aliases, i).String); // Deletes a Bucket
-		free(vector_get(aliases, i).String);
+		hash_unmap(rawcmds, (char*) vector_get(aliases, i)); // Deletes a Bucket
+		free(vector_get(aliases, i));
 	}
 	free(aliases->array);
 	free(rawcmds->table);

@@ -28,7 +28,7 @@
 static void changeDir(Vector* tokens) {
 	int error = 0;
 	if (tokens->size == 2) // Changes to the given directory
-		error = chdir(vector_get(tokens, 1).String);
+		error = chdir((char*) vector_get(tokens, 1));
 	else if (tokens->size == 1) // Changes to the user's home directory
 		error = chdir(getenv("HOME"));
 	else
@@ -158,12 +158,12 @@ int main(void) {
 				}
 				//==================================================================================
 		 		Vector tokens = vector_split(input, " "); // User input tokens
-		 		#define COMMAND vector_get(&tokens, 0).String
+		 		#define COMMAND (char*) vector_get(&tokens, 0)
 				//==================================================================================
 				// Injecting the real commands into user input before running.
 				char line[BUFFER_SIZE];
 				for (register unsigned int i = 0; i < aliases.size; i++) {
-					if (!strcmp(COMMAND, vector_get(&aliases, i).String)) { // Does the command have an alias?
+					if (!strcmp(COMMAND, (char*) vector_get(&aliases, i))) { // Does the command have an alias?
 						strncpy(line, hash_lookUp(&rawcmds, COMMAND).String, sizeof(line));
 						Vector args = vector_split(line, " ");
 						for (register unsigned int j = args.size-1; j > 0; j--)
@@ -179,7 +179,7 @@ int main(void) {
 					// Sets up argv, then runs the command
 					char* extArgv[tokens.size+1];
 					for (register unsigned int j = 0; j < tokens.size; j++)
-						extArgv[j] = vector_get(&tokens, j).String;
+						extArgv[j] = (char*) vector_get(&tokens, j);
 					extArgv[tokens.size] = NULL;
 					if (!redirect_pipe(tokens.size+1, extArgv) &&
 						!redirect_in(tokens.size+1, extArgv) &&
