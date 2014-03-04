@@ -74,7 +74,7 @@ void* hash_lookUp(HashTable* table, char* key) {
 			#ifdef HASH_DEBUG
 				printf(COLOR_MAGENTA "HASH: LOOKUP: > %s\n" COLOR_RESET, (char*) BUCKET);
 			#endif
-			char* buffer = substring((char*) BUCKET, 0, indexOf((char*) BUCKET, SPACE));
+			char* buffer = strutil_substring((char*) BUCKET, 0, strutil_indexOf((char*) BUCKET, SPACE));
 			char bucketKey[strlen(buffer)];
 			for (unsigned int i = 0; i < strlen(buffer); i++)
 				bucketKey[i] = buffer[i]; // Collecting the bucket key
@@ -121,7 +121,7 @@ int hash_map(HashTable* table, char* key, char* value) {
 			BUCKET = buffer;
 			return index;
 		} else {
-			char* bucketKey = substring((char*) BUCKET, 0, strlen(key));
+			char* bucketKey = strutil_substring((char*) BUCKET, 0, strlen(key));
 			if (!strcmp(key, bucketKey)) { // If the given key matches the key in the bucket.
 				#ifdef HASH_DEBUG
 					printf(COLOR_MAGENTA "HASH: MAP: \"%s\" mapped to \"%s\" in bucket %d\n" COLOR_RESET, key, value, index);
@@ -155,7 +155,7 @@ void hash_unmap(HashTable* table, char* key) {
 	while (iterations < table->size) {
 		if (index == table->size) index = 0;
 		if (BUCKET != NULL) { // If there is something in this bucket
-			char* buffer = substring((char*) BUCKET, 0, strlen(key));
+			char* buffer = strutil_substring((char*) BUCKET, 0, strlen(key));
 			char bucketKey[strlen(buffer)];
 			for (unsigned int i = 0; i < strlen(buffer); i++) {
 				bucketKey[i] = buffer[i]; // Collecting the bucket key

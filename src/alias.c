@@ -43,8 +43,8 @@ void alias_init(HashTable* rawcmds, Vector* aliases) {
 	*rawcmds = hash_init(lines.size); // Initializes a Hash Table of actual commands
 	for (unsigned int i = 0; i < lines.size; i++) {
 		char* line = (char*) vector_get(&lines, i); // A line in the file
-		char* alias = substring(line, 0, indexOf(line, ASCII_SPACE)); // The command alias (KEY)
-		char* rawcmd = substring(line, indexOf(line, '\'')+1, strlen(line)-1); // The real command being run (VALUE)
+		char* alias = strutil_substring(line, 0, strutil_indexOf(line, ASCII_SPACE)); // The command alias (KEY)
+		char* rawcmd = strutil_substring(line, strutil_indexOf(line, '\'')+1, strlen(line)-1); // The real command being run (VALUE)
 		vector_set(aliases, i, alias);
 		hash_map(rawcmds, alias, rawcmd);
 		free(rawcmd);

@@ -34,9 +34,8 @@ static void changeDir(Vector* tokens) {
 	else
 		printf(COLOR_RED "T-Shell: cd: Too many arguments.\n" COLOR_RESET);
 	if (error) {
-		printf(COLOR_RED);
-		perror("T-Shell: cd");
-		printf(COLOR_RESET);
+		perror(COLOR_RED "T-Shell: cd");
+		puts(COLOR_RESET);
 	}
 }
 
@@ -57,9 +56,8 @@ static void execute(char** extArgv) {
 			}
 		} else wait(&childExitStatus); // Parent (this) process waits for child to finish
 	} else {
-		printf(COLOR_RED);
-		perror("T-Shell: fork");
-		printf(COLOR_RESET);
+		perror(COLOR_RED "T-Shell: fork");
+		puts(COLOR_RESET);
 	}
 }
 
@@ -101,11 +99,11 @@ int main(void) {
 		char* prompt = config_build_prompt(&config); // Building the Prompt from configuration
 		char* input = readline(prompt); // Get User input
 		free(prompt);
-		add_history(input); // Add input to History list
 		if (input == NULL) { // Exits when Ctrl-D is pressed
 			puts("");
 			break;
 		} else if (input[0] != ASCII_NULL) { // If the user typed something
+			add_history(input); // Add input to History list
 			append_history(1, history_path); // Write input to History file
 			if (!strcmp(input, "help")) {
 				puts(COLOR_GREEN);
@@ -122,20 +120,20 @@ int main(void) {
 			} else {
 				//==================================================================================
 				// Expands Tilde '~' to the Users Home Directory
-				if (contains(input, "~")) {
+				if (strutil_contains(input, "~")) {
 					char* home = getenv("HOME");
 					int freei = 0;
 					int tokenNum = 0;
 					int length = 1;
 					char* tempInput = NULL;
-					char** tokens = split_string(input, " ", &tokenNum);
+					char** tokens = strutil_split(input, " ", &tokenNum);
 					length += strlen(tokens[0]);
 					tempInput = realloc(tempInput, ++length * sizeof(char));
 					strcpy(tempInput, tokens[0]);
 					strcat(tempInput, " ");
 					for (register unsigned int i = 1; i < tokenNum; i++) {
 						if (tokens[i][0] == '~') {
-							char* sub = substring(tokens[i], 1, strlen(tokens[i]));
+							char* sub = strutil_substring(tokens[i], 1, strlen(tokens[i]));
 							char* temp = calloc(strlen(home)+strlen(sub)+1, sizeof(char));
 							strcpy(temp, home);
 							strcat(temp, sub);

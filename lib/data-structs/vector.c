@@ -1,6 +1,7 @@
 /* Standard: gnu99 */
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "data-structs/vector.h"
 
@@ -74,7 +75,7 @@ void vector_set(Vector* list, int index, void* value) {
  */
 void vector_add(Vector* list, int index, void* value) {
 	#ifdef VECTOR_DEBUG
-		printf(COLOR_CYAN "VECTOR: Adding value to index %d\n" COLOR_RESET, index);
+		printf(COLOR_CYAN "VECTOR: ADD: Adding value to index %d\n" COLOR_RESET, index);
 	#endif
 	list->size += 1;
 	void** tmp = calloc(list->size, sizeof(void*));
@@ -99,7 +100,7 @@ void vector_add(Vector* list, int index, void* value) {
  */
 void vector_delete(Vector* list, int index) {
 	#ifdef VECTOR_DEBUG
-		printf(COLOR_CYAN "VECTOR: Deleting value at index %d\n" COLOR_RESET, index);
+		printf(COLOR_CYAN "VECTOR: DELETE: Deleting value at index %d\n" COLOR_RESET, index);
 	#endif
 	list->size -= 1;
 	void** tmp = calloc(list->size, sizeof(void*));
@@ -112,4 +113,26 @@ void vector_delete(Vector* list, int index) {
 	free(list->array);
 	list->array = NULL;
 	list->array = tmp;
+}
+
+/*
+ * Splits up a string at a given token.
+ * Argument(s):
+ *   char* string: the string to be split.
+ *   const char* token: the token used to split 'string' at.
+ * Memory Management:
+ *   Free the array member from the returned pointer when done.
+ * Returns: a resizeable array of tokens.
+ */
+Vector vector_split(char* string, const char* token) {
+	#ifdef STRUTIL_DEBUG
+		printf(COLOR_CYAN "VECTOR: SPLIT: Spliting \"%s\" at every occurence of \"%s\"\n" COLOR_RESET, string, token);
+	#endif
+	Vector tokens = vector_init(0);
+	char* part = strtok(string, token);
+	for (size_t i = 0; part != NULL; i++) {
+		vector_add(&tokens, i, part);
+		part = strtok(NULL, token);
+	}
+	return tokens;
 }

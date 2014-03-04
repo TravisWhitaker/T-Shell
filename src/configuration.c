@@ -21,12 +21,12 @@ Configuration config_read(void) {
 		char line[BUFFER_SIZE];
 		while (fgets(line, BUFFER_SIZE, rc) != NULL) {
 			if (strchr(line, '#') == NULL && strlen(line) > 1) {
-				if (contains(line, "COLORS=")) {
-					char* colors = substring(line, indexOf(line, '=')+1, strlen(line)-1);
+				if (strutil_contains(line, "COLORS=")) {
+					char* colors = strutil_substring(line, strutil_indexOf(line, '=')+1, strlen(line)-1);
 					if (!strcmp(colors, "ON")) config.colors = true;
 					free(colors);
-				} else if (contains(line, "PROMPT=")) {
-					char* prompt = substring(line, indexOf(line, '=')+1, strlen(line)-1);
+				} else if (strutil_contains(line, "PROMPT=")) {
+					char* prompt = strutil_substring(line, strutil_indexOf(line, '=')+1, strlen(line)-1);
 					strcpy(config.prompt, prompt);
 					strcat(config.prompt, "\0");
 					free(prompt);
@@ -55,11 +55,11 @@ char* config_build_prompt(Configuration* config) {
 	int length = 0;
 	char* prompt = calloc(0, sizeof(char));
 	int amount = 0;
-	char** pieces = split_string(promptb, "%", &amount);
+	char** pieces = strutil_split(promptb, "%", &amount);
 	for (size_t i = 0; i < amount; i++) { // For each token
-		if (contains(pieces[i], "\\n")) { // Newline
-			replaceAll(pieces[i], '\\', ASCII_BACKSPACE);
-			replaceAll(pieces[i], 'n', ASCII_NEWLINE);
+		if (strutil_contains(pieces[i], "\\n")) { // Newline
+			strutil_replaceAll(pieces[i], '\\', ASCII_BACKSPACE);
+			strutil_replaceAll(pieces[i], 'n', ASCII_NEWLINE);
 		}
 		char first = pieces[i][0];
 		if (first == 'D') { // Directory
