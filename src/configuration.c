@@ -15,7 +15,7 @@
  */
 Configuration config_read(void) {
 	Configuration config = {false, ""};
-	char* path = construct_path(".tsh-rc", 7);
+	char* path = construct_path(".tsh-rc");
 	FILE* rc = fopen(path, "a+");
 	if (rc != NULL) {
 		char line[BUFFER_SIZE];
@@ -54,7 +54,7 @@ char* config_build_prompt(Configuration* config) {
 	strcpy(promptb, config->prompt);
 	int length = 0;
 	char* prompt = calloc(0, sizeof(char));
-	int amount = 0;
+	unsigned int amount = 0;
 	char** pieces = strutil_split(promptb, "%", &amount);
 	for (size_t i = 0; i < amount; i++) { // For each token
 		if (strutil_contains(pieces[i], "\\n")) { // Newline

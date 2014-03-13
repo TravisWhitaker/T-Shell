@@ -18,7 +18,7 @@
  */
 static Vector alias_read(void) {
 	Vector contents = vector_init(0);
-	char* filePath = construct_path(".tsh-alias", 10);
+	char* filePath = construct_path(".tsh-alias");
 	FILE* file = fopen(filePath, "a+");
 	if (file != NULL) {
 		char line[BUFFER_SIZE];

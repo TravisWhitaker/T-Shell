@@ -2,7 +2,7 @@
 #define HASHTABLE_H_
 
 typedef struct {
-	int size;
+	unsigned int size;
 	void** table;
 } HashTable;
 

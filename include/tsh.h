@@ -17,6 +17,6 @@
 #define COLOR_LENGTH	5			// The Length of the color macro strings
 #define BUFFER_SIZE		BUFSIZ/32	// New buffer size.
 
-extern char* construct_path(char* filename, size_t length);
+extern char* construct_path(char* filename);
 
 #endif

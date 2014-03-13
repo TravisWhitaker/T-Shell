@@ -71,7 +71,7 @@ static void execute(char** extArgv) {
  * Returns:
  *   The absolute path of the file.
  */
-char* construct_path(char* filename, size_t length) {
+char* construct_path(char* filename) {
 	char* filePath = calloc(BUFFER_SIZE, sizeof(char));
 	strcpy(filePath, getenv("HOME"));
 	strcat(filePath, "/");
@@ -94,7 +94,7 @@ int main(void) {
 	HashTable rawcmds;
 	Vector aliases;
 	alias_init(&rawcmds, &aliases);
-	char* history_path = construct_path(".tsh-history", 12);
+	char* history_path = construct_path(".tsh-history");
 	while (true) {
 		char* prompt = config_build_prompt(&config); // Building the Prompt from configuration
 		char* input = readline(prompt); // Get User input
@@ -123,7 +123,7 @@ int main(void) {
 				if (strutil_contains(input, "~")) {
 					char* home = getenv("HOME");
 					int freei = 0;
-					int tokenNum = 0;
+					unsigned int tokenNum = 0;
 					int length = 1;
 					char* tempInput = NULL;
 					char** tokens = strutil_split(input, " ", &tokenNum);

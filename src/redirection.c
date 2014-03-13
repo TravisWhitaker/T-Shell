@@ -37,7 +37,7 @@ static inline void raise_errno(char* message) {
  * Returns:
  *   An array of command line arguments.
  */
-static char** args_in_range(char* argv[], int start, int end) {
+static char** args_in_range(char* argv[], unsigned int start, unsigned int end) {
 	char** args = NULL;
 	unsigned int index;
 	for (unsigned int i = start; i <= end; i++) {
@@ -58,7 +58,7 @@ static char** args_in_range(char* argv[], int start, int end) {
  *   redir_sym* sym: A pointer to the struct to store the symbol and its index in.
  */
 static void find_symbol(int argc, char* argv[], const char* symbol, redir_sym* rsym) {
-	for (unsigned int i = 1; i < (argc-1); i++) {
+	for (int i = 1; i < (argc-1); i++) {
 		if (!strcmp(argv[i], symbol)) {
 			rsym->symbol = argv[i];
 			rsym->index = i;

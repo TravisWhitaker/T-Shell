@@ -8,7 +8,7 @@
 
 ## Goal
   **Short term:** I've been using this project as a kind of road-map to follow while I learn [C][C]. In addition to that, I've been learning more about [Command Line Shells][Shell] and [Linux][Linux] in general.
-  
+
   **Long term:** I intend make this a comprehensive shell, with capabilities similar to that of [Bash][Bash], [Zsh][Zsh], and [Fish][Fish].
 
 ***
@@ -48,9 +48,9 @@
       - Declaring and Calling Functions.
         - Making [System Calls][Syscall].
       - Using the [Preprocessor][Preprocessor].
-    	  - Including Header files.
-    	  - Using Macros.
-    	  - Conditional Code Inclusion.
+          - Including Header files.
+          - Using Macros.
+          - Conditional Code Inclusion.
     - More Advanced features:
       - Managing Memory.
         - Introduced to the fundamental concepts of the Stack and Heap.
@@ -65,7 +65,7 @@
   - The characteristics / common features of a [Command Line Shell][Shell].
     - Command Aliasing.
     - [Redirection][Redirection].
-  
+
   - What [System Calls][Syscall] are.
   - Basic [Signal][Signal] Handling.
   - Creating and running new processes ([Fork][Fork] & [Exec][Exec]).
@@ -98,7 +98,7 @@
   Notes:<br>
   1) The Makefile specifies [Clang][Clang]/[LLVM][LLVM] as the compiler, feel free to change that.<br>
   2) When un-installing, you should remove T-Shell from `/etc/shells`.
-  
+
 [C]: http://en.wikipedia.org/wiki/C_(programming_language)
 [GLIBC]: http://en.wikipedia.org/wiki/GNU_C_Library
 [GCC]: http://en.wikipedia.org/wiki/GNU_Compiler_Collection

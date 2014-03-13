@@ -73,13 +73,14 @@ void vector_set(Vector* list, int index, void* value) {
  *    int index: the location to add the element to.
  *    void* value: the new value.
  */
-void vector_add(Vector* list, int index, void* value) {
+void vector_add(Vector* list, unsigned int index, void* value) {
 	#ifdef VECTOR_DEBUG
 		printf(COLOR_CYAN "VECTOR: ADD: Adding value to index %d\n" COLOR_RESET, index);
 	#endif
 	list->size += 1;
 	void** tmp = calloc(list->size, sizeof(void*));
-	unsigned int i = 0, o = 0;
+	unsigned int i = 0;
+	unsigned int o = 0;
 	while (i < list->size) {
 		if (i == index) {
 			((void**) tmp)[i] = value;
@@ -98,15 +99,19 @@ void vector_add(Vector* list, int index, void* value) {
  *    Vector* list: points to the struct containing the array.
  *	  int index: the location to delete the element from.
  */
-void vector_delete(Vector* list, int index) {
+void vector_delete(Vector* list, unsigned int index) {
 	#ifdef VECTOR_DEBUG
 		printf(COLOR_CYAN "VECTOR: DELETE: Deleting value at index %d\n" COLOR_RESET, index);
 	#endif
 	list->size -= 1;
 	void** tmp = calloc(list->size, sizeof(void*));
-	unsigned int i = 0, o = 0;
+	unsigned int i = 0;
+	unsigned int o = 0;
 	while (i < list->size) {
-		if (i == index) o++;
+		if (i == index)
+		{
+			o++;
+		}
 		tmp[i] = vector_get(list, i+o);
 		i++;
 	}
